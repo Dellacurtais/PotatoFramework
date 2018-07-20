@@ -1,0 +1,14 @@
+<?php
+
+class Model_%NAMECLASS% extends Model_Base_%NAMECLASS%{
+
+    protected static $_instance;
+
+    public static function init_instance(){
+        if (is_null(self::$_instance)){
+            self::$_instance = new static();
+        }
+        return self::$_instance;
+    }
+
+}

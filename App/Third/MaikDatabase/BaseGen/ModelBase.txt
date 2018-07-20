@@ -1,0 +1,16 @@
+<?php
+
+abstract class Model_Base_%NAMECLASS% extends \MaikDatabase\BaseModel {
+
+    public function initTableDefinitions(){
+        $this->setTable("%NAMEDB%");
+
+%COLLUNSSET%
+
+    }
+
+    public function setupTable(){
+
+    }
+
+}
