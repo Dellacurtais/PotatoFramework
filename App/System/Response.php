@@ -1,7 +1,7 @@
 <?php
 namespace System;
 
-class Response {
+class Response extends ResponseType {
     protected static $instance = null;
 
     protected $allHeaders;
@@ -21,18 +21,21 @@ class Response {
     public static function get($key, $xss = 0){
         if ($xss)
             return filter_input(INPUT_GET, $key, FILTER_SANITIZE_STRING);
+
         return $_GET[$key];
     }
 
     public static function post($key, $xss = 0){
         if ($xss)
             return filter_input(INPUT_POST, $key, FILTER_SANITIZE_STRING);
+
         return $_POST[$key];
     }
 
     public function request($key, $xss = 0){
         if ($xss)
             return filter_input(INPUT_REQUEST, $key, FILTER_SANITIZE_STRING);
+
         return $_REQUEST[$key];
     }
 
@@ -51,19 +54,7 @@ class Response {
             header("{$key}:{$value}");
     }
 
-    public function headerJson(){
-        $this->setHeader("Content-Type", "application/json");
-    }
-
-    public function headerHtml(){
-        $this->setHeader("Content-Type", "text/html; charset=utf-8");
-    }
-
-    public function headerJs(){
-        $this->setHeader("Content-Type", "application/javascript");
-    }
-
-    public function headerCss(){
-        $this->setHeader("Content-Type", "text/css");
+    public function setHeaderType($type){
+        $this->setHeader("Content-Type", $type);
     }
 }

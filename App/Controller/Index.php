@@ -1,11 +1,13 @@
 <?php
 namespace Controller;
 
-use System\FastApp;
-use System\Libraries\Forms;
-use System\Libraries\Session;
+use System\Controller;
 
-class Index {
+class Index extends Controller {
+
+    public function __construct(){
+        parent::__construct();
+    }
 
     /**
      * Default Route Method

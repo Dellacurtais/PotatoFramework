@@ -31,6 +31,7 @@ class FastApp {
         //CONTROLLER & METHODS
         $this->Default = str_replace($Config['base_dir'],"",$_SERVER['REQUEST_URI']);
         $RequestURI = $this->Default;
+        $this->rePatch($RequestURI);
         if (empty($this->Patch[0])) {
             $RequestURI = $Config['default_route'];
         }
@@ -42,7 +43,6 @@ class FastApp {
             }else{
                 $RequestURI = $this->Routes[$RequestURI];
             }
-
         }
 
         if (!$checkController) {
@@ -51,33 +51,35 @@ class FastApp {
             if (class_exists($nController)) {
                 $initController = new $nController();
             }else{
-                $this->rePatch($Config['default_route']);
-                $nController = "\\Controller\\" . $this->Patch[0];
-                $initController = new $nController();
+                redirect($Config['route_error_404']);
             }
-
             if (isset($this->Patch[1])) {
                 $nMethod = $this->Patch[1];
                 if (method_exists($initController, $nMethod)) {
                     $initController->$nMethod();
+                }else{
+                    redirect($Config['route_error_404']);
                 }
+            }else{
+                redirect($Config['route_error_404']);
             }
         }else{
             $nController = $this->Routes[$RequestURI]['Controller'];
             $nMethod = $this->Routes[$RequestURI]['Method'];
 
             if (isset($this->Routes[$RequestURI]['Type']) && $this->Routes[$RequestURI]['Type'] !== "ALL" && $_SERVER['REQUEST_METHOD'] !== $this->Routes[$RequestURI]['Type']){
-                redirect($Config['default_route']);
+                redirect($Config['route_error_404']);
             }
+
             if (isset($this->Routes[$RequestURI]['Headers']) && is_array($this->Routes[$RequestURI]['Headers'])){
                 foreach ($this->Routes[$RequestURI]['Headers'] as $header){
                     Response::getInstance()->setHeader($header);
                 }
             }
+
             if (isset($this->Routes[$RequestURI]['RequireHeader']) && is_array($this->Routes[$RequestURI]['RequireHeader'])){
                 foreach ($this->Routes[$RequestURI]['RequireHeader'] as $key=>$header){
                     if (Response::getInstance()->getHeader($key) !== $header){
-                        Response::getInstance()->headerHtml();
                         exit("No have \"{$key}\" in request header");
                     }
                 }
@@ -88,10 +90,10 @@ class FastApp {
                 if (method_exists($initController, $nMethod)) {
                     $initController->$nMethod();
                 }else{
-                    redirect($Config['default_route']);
+                    redirect($Config['route_error_404']);
                 }
             }else{
-                redirect($Config['default_route']);
+                redirect($Config['route_error_404']);
             }
         }
 
@@ -122,7 +124,7 @@ class FastApp {
 
         $database->generate = $this->Config['db_generate'];
         $database->generate_dir = BASE_PATH.'Models/Generate';
-        \MaikDatabase\Settings::getInstance()->createConnection($database, true, "frame_work");
+        \MaikDatabase\Settings::getInstance()->createConnection($database, true, $this->Config['db_keyname']);
     }
 
     public function loadHelper($file){
