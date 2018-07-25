@@ -14,25 +14,19 @@ Criação de Rotas:
 * App/Configs/Routes.php
 
 Ex:
+[
 
-$Routes['NotFound'] = [
-
-    'Controller' => "\\Controller\\Error",
+    $Routes['NotFound'] = [
+        'Controller' => "\\Controller\\Error",
+        "Method" => "NotFound",
+        'Type' => "GET",
+        'Headers' => [
+            "HTTP/1.0 404 Not Found"
+        ],
+        'RequireHeader' => []
+    ];
     
-    "Method" => "NotFound",
-    
-    'Type' => "GET",
-    
-    'Headers' => [
-    
-        "HTTP/1.0 404 Not Found"
-        
-    ],
-    
-    'RequireHeader' => []
-    
-];
-
+]
 Pequeno ORM também desenvolvido por mim foi utilizado no projeto:
 * https://github.com/Dellacurtais/PHPDatabase
 
