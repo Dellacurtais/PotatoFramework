@@ -14,7 +14,7 @@ Criação de Rotas:
 * App/Configs/Routes.php
 
 Ex:
-[
+
 
     $Routes['NotFound'] = [
         'Controller' => "\\Controller\\Error",
@@ -26,7 +26,7 @@ Ex:
         'RequireHeader' => []
     ];
     
-]
+
 Pequeno ORM também desenvolvido por mim foi utilizado no projeto:
 * https://github.com/Dellacurtais/PHPDatabase
 
