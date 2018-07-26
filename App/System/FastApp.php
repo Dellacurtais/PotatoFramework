@@ -48,6 +48,7 @@ class FastApp {
         if (!$checkController) {
             $this->rePatch($RequestURI);
             $nController = "\\Controller\\" . $this->Patch[0];
+            $initController = null;
             if (class_exists($nController)) {
                 $initController = new $nController();
             }else{
@@ -70,21 +71,18 @@ class FastApp {
             if (isset($this->Routes[$RequestURI]['Type']) && $this->Routes[$RequestURI]['Type'] !== "ALL" && $_SERVER['REQUEST_METHOD'] !== $this->Routes[$RequestURI]['Type']){
                 redirect($Config['route_error_404']);
             }
-
             if (isset($this->Routes[$RequestURI]['Headers']) && is_array($this->Routes[$RequestURI]['Headers'])){
                 foreach ($this->Routes[$RequestURI]['Headers'] as $header){
                     Response::getInstance()->setHeader($header);
                 }
             }
-
             if (isset($this->Routes[$RequestURI]['RequireHeader']) && is_array($this->Routes[$RequestURI]['RequireHeader'])){
                 foreach ($this->Routes[$RequestURI]['RequireHeader'] as $key=>$header){
                     if (Response::getInstance()->getHeader($key) !== $header){
-                        exit("No have \"{$key}\" in request header");
+                        throw new \Exception("No have \"{$key}\" in request header");
                     }
                 }
             }
-
             if (class_exists($nController)) {
                 $initController = new $nController();
                 if (method_exists($initController, $nMethod)) {

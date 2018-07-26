@@ -12,7 +12,7 @@ $Config['db_hostname'] = "localhost";
 $Config['db_database'] = "_testes";
 $Config['db_username'] = "root";
 $Config['db_password'] = "mysql";
-$Config['db_generate'] = true;
+$Config['db_generate'] = false;
 $Config['db_keyname'] = "frame_work";
 
 $Config['session_id'] = "sphap";

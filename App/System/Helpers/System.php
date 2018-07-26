@@ -65,3 +65,16 @@ if (!function_exists("slash_item")) {
         return rtrim($Config[$item], '/').'/';
     }
 }
+
+if (!function_exists("slash_item")) {
+    function ramdomCode($tamanho = 8) {
+        $retorno = '';
+        $caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+        $len = strlen($caracteres);
+        for ($n = 1; $n <= $tamanho; $n++) {
+            $rand = mt_rand(1, $len);
+            $retorno .= $caracteres[$rand-1];
+        }
+        return $retorno;
+    }
+}

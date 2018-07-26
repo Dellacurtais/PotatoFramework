@@ -6,6 +6,10 @@ class Response extends ResponseType {
 
     protected $allHeaders;
 
+    const GET = "GET";
+    const POST = "POST";
+    const REQUEST = "REQUEST";
+
     public static function getInstance(){
         if (is_null(self::$instance)){
             self::$instance = new Response();

@@ -1,6 +1,7 @@
 <?php
 namespace System\Libraries;
 
+use System\FastApp;
 
 class Crypt {
 
