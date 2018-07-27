@@ -47,7 +47,7 @@ class Generate {
         $this->colunInit .= $Coluna;
     }
 
-    public function generate($dir){
+    public function generate($dir, $onlyBase = false){
         $this->baseInit = str_replace("%COLLUNSSET%", $this->colunInit, $this->baseInit);
 
         if (!is_dir($dir)){
@@ -58,9 +58,12 @@ class Generate {
         }
 
         $FileBase = $dir."/Base/".$this->BaseName.$this->Name.".php";
-        $FileModel = $dir."/".$this->Name.".php";
+        $FileModel = $dir."/Model_".$this->Name.".php";
 
         file_put_contents($FileBase, $this->baseInit);
-        file_put_contents($FileModel, $this->modelInit);
+
+        if (!$onlyBase) {
+            file_put_contents($FileModel, $this->modelInit);
+        }
     }
 }

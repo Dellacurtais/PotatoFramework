@@ -1,6 +1,9 @@
 <?php
+namespace Models;
 
-class Model_%NAMECLASS% extends Model_Base_%NAMECLASS%{
+use Models\Base\Base_%NAMECLASS%;
+
+class Model_%NAMECLASS% extends Base_%NAMECLASS% {
 
     protected static $_instance;
 

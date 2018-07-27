@@ -66,7 +66,7 @@ if (!function_exists("slash_item")) {
     }
 }
 
-if (!function_exists("slash_item")) {
+if (!function_exists("ramdomCode")) {
     function ramdomCode($tamanho = 8) {
         $retorno = '';
         $caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';

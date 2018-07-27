@@ -16,6 +16,10 @@ class Forms {
     protected $inputs = [];
     protected $errors = [];
 
+    public function __construct(){
+        self::$instance = $this;
+    }
+
     /**
      * @param $key
      * @param $functionRule mixed array, function
@@ -52,6 +56,10 @@ class Forms {
         $CodeForm = ramdomCode(8);
         Session::getInstance()->setFlash($NameForm, $CodeForm);
         return "<form {$attrs}><input type='hidden' name='{$NameForm}' value='$CodeForm'>";
+    }
+
+    public function end(){
+        return "</form>";
     }
 
     /**

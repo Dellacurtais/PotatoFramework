@@ -1,6 +1,9 @@
 <?php
+namespace Models\Base;
 
-abstract class Model_Base_%NAMECLASS% extends \MaikDatabase\BaseModel {
+use MaikDatabase\BaseModel;
+
+abstract class Base_%NAMECLASS% extends BaseModel {
 
     public function initTableDefinitions(){
         $this->setTable("%NAMEDB%");

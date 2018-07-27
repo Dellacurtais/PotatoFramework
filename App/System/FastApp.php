@@ -121,7 +121,9 @@ class FastApp {
         $database->password = $this->Config['db_password'];
 
         $database->generate = $this->Config['db_generate'];
-        $database->generate_dir = BASE_PATH.'Models/Generate';
+        $database->generate_dir = BASE_PATH.'Models/'.$this->Config['db_generate_dir'];
+        $database->generate_base = $this->Config['db_generate_base_only'];
+
         \MaikDatabase\Settings::getInstance()->createConnection($database, true, $this->Config['db_keyname']);
     }
 

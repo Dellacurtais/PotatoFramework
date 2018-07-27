@@ -5,22 +5,22 @@ $Routes = array();
 $Routes['NotFound'] = [
     'Controller' => "\\Controller\\Error",
     "Method" => "NotFound",
-    'Type' => "GET",
+    'Type' => "GET",  //GET|POST|PUT|DELETE|ALL
     'Headers' => [
         "HTTP/1.0 404 Not Found"
     ],
     'RequireHeader' => []
 ];
 
-$Routes['Home'] = [
+/**
+ * Rotas do sistema
+ */
+$Routes['Login'] = [
     'Controller' => "\\Controller\\Index",
-    "Method" => "Home",
-    'Type' => "GET", //GET|POST|PUT|DELETE|ALL
-    'Headers' => [
-        "Batata-Frita: teste"
-    ],
-    'RequireHeader' => [
-    ]
+    "Method" => "Login",
+    'Type' => "GET",
+    'Headers' => [],
+    'RequireHeader' => []
 ];
 
 

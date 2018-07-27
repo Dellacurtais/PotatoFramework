@@ -170,7 +170,7 @@ class Database {
                 );
                 $Generate->setColun($Array);
             }
-            $Generate->generate($this->config->generate_dir);
+            $Generate->generate($this->config->generate_dir, $this->config->generate_base);
         }
     }
 
