@@ -1,11 +1,10 @@
 <?php
 $Routes = array();
 
-
 $Routes['NotFound'] = [
     'Controller' => "\\Controller\\Error",
     "Method" => "NotFound",
-    'Type' => "GET",  //GET|POST|PUT|DELETE|ALL
+    'Type' => \System\Response::GET,  //GET|POST|PUT|DELETE|ALL
     'Headers' => [
         "HTTP/1.0 404 Not Found"
     ],
@@ -15,12 +14,11 @@ $Routes['NotFound'] = [
 /**
  * Rotas do sistema
  */
-$Routes['Login'] = [
+
+$Routes['Home'] = [
     'Controller' => "\\Controller\\Index",
-    "Method" => "Login",
-    'Type' => "GET",
+    "Method" => "Home",
+    'Type' => \System\Response::GET,
     'Headers' => [],
     'RequireHeader' => []
 ];
-
-

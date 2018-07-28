@@ -68,9 +68,10 @@ class FastApp {
             $nController = $this->Routes[$RequestURI]['Controller'];
             $nMethod = $this->Routes[$RequestURI]['Method'];
 
-            if (isset($this->Routes[$RequestURI]['Type']) && $this->Routes[$RequestURI]['Type'] !== "ALL" && $_SERVER['REQUEST_METHOD'] !== $this->Routes[$RequestURI]['Type']){
+            if (isset($this->Routes[$RequestURI]['Type']) && $this->Routes[$RequestURI]['Type'] !== Response::ALL && $_SERVER['REQUEST_METHOD'] !== $this->Routes[$RequestURI]['Type']){
                 redirect($Config['route_error_404']);
             }
+
             if (isset($this->Routes[$RequestURI]['Headers']) && is_array($this->Routes[$RequestURI]['Headers'])){
                 foreach ($this->Routes[$RequestURI]['Headers'] as $header){
                     Response::getInstance()->setHeader($header);

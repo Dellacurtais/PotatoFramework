@@ -43,6 +43,17 @@ class Forms {
     }
 
     /**
+     * Generate random code to return on ajax response
+     * @param $NameForm string name of form
+     * @return string token form
+     */
+    public function initJson($NameForm){
+        $CodeForm = ramdomCode(8);
+        Session::getInstance()->setFlash($NameForm, $CodeForm);
+        return $CodeForm;
+    }
+
+    /**
      * @param $attr array Atributos do Form
      * @param $NameForm string key form name
      * @return string

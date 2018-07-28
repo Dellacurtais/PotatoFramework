@@ -1,10 +1,10 @@
 <?php
 $Config = array();
 
-$Config['name_project'] = "";
+$Config['name_project'] = "PotatoFramework";
 
-$Config['base_dir'] = "/_sae/";
-$Config['base_url'] = "http://127.0.0.1/_sae/";
+$Config['base_dir'] = "/";
+$Config['base_url'] = "http://127.0.0.1/";
 
 $Config['enable_query_strings'] = true;
 $Config['encrypt_key'] = "A65ASD56654DS46554D64D";
@@ -32,7 +32,7 @@ $Config['auth_user'] = "admin@maik";
 $Config['auth_pass'] = "d592bd35-6338-4131-a6be-0cf70a24192d";
 
 //Configs Rotas
-$Config['default_route'] = "Login";
+$Config['default_route'] = "Home";
 $Config['route_error_404'] = "NotFound";
 
 //Default Lang

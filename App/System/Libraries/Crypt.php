@@ -3,8 +3,12 @@ namespace System\Libraries;
 
 use System\FastApp;
 
+
 class Crypt {
 
+    /**
+     * @author fonte php.net
+     */
     public static function encrpyt($plaintext, $cipher = "AES-256-CBC", $options = OPENSSL_RAW_DATA){
         $key = FastApp::getInstance()->getConfig("encrypt_key");
         $ivlen = openssl_cipher_iv_length($cipher);
@@ -15,6 +19,9 @@ class Crypt {
         return $ciphertext;
     }
 
+    /**
+     * @author fonte php.net
+     */
     public static function decrypt($ciphertext, $cipher = "AES-256-CBC", $options = OPENSSL_RAW_DATA){
         $key = FastApp::getInstance()->getConfig("encrypt_key");
         $c = base64_decode($ciphertext);

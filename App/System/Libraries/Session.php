@@ -30,6 +30,10 @@ class Session {
      */
     public function setFlash($key,$message){
         $Flash = $this->get("flash_data");
+
+        if (isset($Flash[$key]))
+            unset($Flash[$key]);
+
         $data = array_merge(array($key => $message), is_array($Flash) ? $Flash : array() );
         $this->set("flash_data",$data);
     }

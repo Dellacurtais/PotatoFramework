@@ -8,6 +8,11 @@ class Response extends ResponseType {
 
     const GET = "GET";
     const POST = "POST";
+    const PUT = "PUT";
+    const DELETE = "DELETE";
+
+    const ALL = "ALL";
+
     const REQUEST = "REQUEST";
 
     public static function getInstance(){
@@ -60,5 +65,9 @@ class Response extends ResponseType {
 
     public function setHeaderType($type){
         $this->setHeader("Content-Type", $type);
+    }
+
+    public function encodeJson($msg, $data = null, $response = false){
+        return json_encode(["msg" => $msg, "data" => $data, "responseError" => $response]);
     }
 }
