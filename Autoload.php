@@ -1,4 +1,5 @@
 <?php
+define("ROOT_PATH", __DIR__);
 define("BASE_PATH", __DIR__."/App/");
 define("BASE_PATH_CACHE", __DIR__."/App/Cache/");
 define("BASE_PATH_THIRD", __DIR__."/App/Third/");
@@ -22,3 +23,6 @@ function loaderFastApp($class) {
 
 spl_autoload_register('loaderFastApp');
 
+require_once "App/Configs/Config.php";
+require_once "App/Configs/Routes.php";
+require_once "App/Configs/DinamycRoutes.php";

@@ -11,13 +11,9 @@ $Routes['NotFound'] = [
     'RequireHeader' => []
 ];
 
-/**
- * Rotas do sistema
- */
-
-$Routes['Home'] = [
+$Routes['Login'] = [
     'Controller' => "\\Controller\\Index",
-    "Method" => "Home",
+    "Method" => "Login",
     'Type' => \System\Response::GET,
     'Headers' => [],
     'RequireHeader' => []

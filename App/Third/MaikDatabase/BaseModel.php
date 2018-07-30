@@ -49,6 +49,10 @@ class BaseModel extends Property {
         }
     }
 
+    public function getConnection(){
+        return $this->___Connection;
+    }
+
     public function setTable($table){
         $this->___table_name = $table;
         $this->___alias = $this->alias();

@@ -1,7 +1,7 @@
 <?php
 $Config = array();
 
-$Config['name_project'] = "PotatoFramework";
+$Config['name_project'] = "";
 
 $Config['base_dir'] = "/";
 $Config['base_url'] = "http://127.0.0.1/";
@@ -18,7 +18,7 @@ $Config['db_database'] = "_testes";
 $Config['db_username'] = "root";
 $Config['db_password'] = "mysql";
 
-$Config['db_generate'] = true; //Gerar Modelos
+$Config['db_generate'] = false; //Gerar Modelos
 $Config['db_generate_dir'] = ""; //Pasta para Gerar
 $Config['db_generate_base_only'] = true; //Atualizar apenas arquivo base do modelo
 $Config['db_keyname'] = "frame_work"; //Nome da conexão
@@ -32,7 +32,7 @@ $Config['auth_user'] = "admin@maik";
 $Config['auth_pass'] = "d592bd35-6338-4131-a6be-0cf70a24192d";
 
 //Configs Rotas
-$Config['default_route'] = "Home";
+$Config['default_route'] = "Login";
 $Config['route_error_404'] = "NotFound";
 
 //Default Lang

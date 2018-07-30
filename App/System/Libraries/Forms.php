@@ -15,6 +15,7 @@ class Forms {
 
     protected $inputs = [];
     protected $errors = [];
+    protected $getFields = [];
 
     public function __construct(){
         self::$instance = $this;
@@ -103,6 +104,7 @@ class Forms {
 
         foreach ($this->inputs as $input => $args){
             $Value = Response::getInstance()->$Method($input, $xss);
+            $this->getFields[$input] = $Value;
             try {
                 $isRequire = $args[0];
                 if ($isRequire && (empty($Value) || is_null($Value))){
@@ -137,6 +139,18 @@ class Forms {
                 throw new \Exception($e->getMessage());
             }
         }
+    }
+
+    /**
+     * Get Validate Fields
+     * @param $key string
+     * @return array|string
+     */
+    public function getFields($key = null){
+        if (!is_null($key))
+            return $this->getFields[$key];
+
+        return $this->getFields;
     }
 
     /**

@@ -6,6 +6,7 @@ class FastApp {
 
     protected $Config;
     protected $Routes;
+    protected $RoutesDynamic;
     protected $Patch;
     protected $Default;
 
@@ -14,13 +15,14 @@ class FastApp {
     }
 
     public function __construct(){
-        global $Config, $Routes;
+        global $Config, $Routes, $DynamicRoutes;
         self::$instance = $this;
 
         $this->loadHelper("System");
 
         //ROUTES
         $this->Routes = $Routes;
+        $this->RoutesDynamic = $DynamicRoutes;
 
         //CONFIGS
         $this->Config = $Config;
@@ -29,7 +31,8 @@ class FastApp {
         }
 
         //CONTROLLER & METHODS
-        $this->Default = str_replace($Config['base_dir'],"",$_SERVER['REQUEST_URI']);
+        $this->Default = str_replace([ $Config['base_dir'], $_SERVER['QUERY_STRING'], "?"],"",$_SERVER['REQUEST_URI']);
+
         $RequestURI = $this->Default;
         $this->rePatch($RequestURI);
         if (empty($this->Patch[0])) {
@@ -41,7 +44,16 @@ class FastApp {
             if (is_array($this->Routes[$RequestURI]) && isset($this->Routes[$RequestURI]['Controller']) && isset($this->Routes[$RequestURI]['Method'])){
                 $checkController = true;
             }else{
-                $RequestURI = $this->Routes[$RequestURI];
+                $RequestURI = $Config['default_route'];
+            }
+        }else{
+            foreach ($this->RoutesDynamic as $route => $args){
+                $key = str_replace([':any', ':num'], ['[^/]+', '[0-9]+'], $route);
+                if (preg_match('#^'.$key.'$#', $RequestURI, $matches)){
+                    $this->Routes[$matches[0]] = $args;
+                    $checkController = true;
+                    break;
+                }
             }
         }
 
