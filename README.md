@@ -5,7 +5,7 @@ Framework em PHP, levei como inspiração do Codeigniter.
 Umas das dificuldade com CodeIgniter em relação a falta de uso de namespace entre outros fatores me fez criar algo da minha maneira.
 Primeiro feito para fins didáticos.
 
-Não foi utilizado nenhuma estrutura do Codeigniter só para constar, apenas a librarie de Lang que levou pequenas modíficações.
+Não foi utilizado nenhuma estrutura do Codeigniter só para constar, apenas a librarie de Lang e algumas funções que levou pequenas modíficações.
 
 Configurações gerais em:
 * App/Configs/Config.php
