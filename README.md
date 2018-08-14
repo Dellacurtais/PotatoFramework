@@ -17,7 +17,7 @@ Ex:
 
 
     $Routes['NotFound'] = [
-        'Controller' => "\\Controller\\Error",
+        'Controller' => \Controller\Error::class
         "Method" => "NotFound",
         'Type' => "GET",
         'Headers' => [
