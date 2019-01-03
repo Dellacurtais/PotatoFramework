@@ -1,9 +1,10 @@
 <?php
 namespace System\Libraries;
 
-use System\Response;
+use System\Request;
 
 class Forms {
+
     protected static $instance;
 
     public static function getInstance(){
@@ -75,6 +76,7 @@ class Forms {
     }
 
     /**
+     * @param string|null $NameForm Nome do Fomulário se houver
      * @param string $type
      * @param int $xss
      * @throws \Exception
@@ -82,33 +84,41 @@ class Forms {
     public function validate($NameForm, $type = "POST", $xss = 0){
         $Method = null;
         switch ($type){
-            case Response::GET:
+            case Request::GET:
                 $Method = "get";
                 break;
-            case Response::POST:
+            case Request::POST:
                 $Method = "post";
                 break;
-            case Response::REQUEST:
+            case Request::REQUEST:
                 $Method = "request";
+                break;
+            case Request::JSON:
+                $Method = "json";
+                break;
+            case Request::EXTRA:
+                $Method = "extra";
                 break;
             default:
                 $Method = "post";
                 break;
         }
 
-        $TokenForm = Response::getInstance()->$Method($NameForm);
-        if (!$this->validToken($NameForm, $TokenForm)){
-            $this->errors[$NameForm] = Lang::getInstance()->line("form_invalid_token");
-            return;
+        if (!is_null($NameForm)) {
+            $TokenForm = Request::getInstance()->$Method($NameForm);
+            if (!$this->validToken($NameForm, $TokenForm)) {
+                $this->errors[$NameForm] = Lang::getInstance()->line("form_invalid_token");
+                return;
+            }
         }
 
         foreach ($this->inputs as $input => $args){
-            $Value = Response::getInstance()->$Method($input, $xss);
+            $Value = Request::getInstance()->$Method($input, $xss);
             $this->getFields[$input] = $Value;
             try {
                 $isRequire = $args[0];
                 if ($isRequire && (empty($Value) || is_null($Value))){
-                    $this->errors[$input] = Lang::getInstance()->line_replace("form_require",":attr:", $input);
+                    $this->errors[$input] = Lang::getInstance()->line_replace("form_require",":attr:", Lang::getInstance()->line($input));
                 }else{
                     if (is_array($args[1])){
                         $Class = $args[1][0];
@@ -147,9 +157,11 @@ class Forms {
      * @return array|string
      */
     public function getFields($key = null){
-        if (!is_null($key))
+        if (!is_null($key)) {
+            if (!isset($this->getFields[$key]) || empty($this->getFields[$key]))
+                return null;
             return $this->getFields[$key];
-
+        }
         return $this->getFields;
     }
 

@@ -1,7 +1,7 @@
 <?php
 namespace Controller;
 
-use System\Controller;
+use System\Core\Controller;
 
 class Error extends Controller {
 
@@ -11,7 +11,6 @@ class Error extends Controller {
 
     /**
      * Error 404
-     * @return null
      */
     public function NotFound(){
         $this->view("Error/NotFound");

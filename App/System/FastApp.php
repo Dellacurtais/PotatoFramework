@@ -1,152 +1,194 @@
 <?php
 namespace System;
 
+use System\Core\DefaultErrors;
+use System\Core\HooksRoutes;
+use System\Core\Routes;
+use System\Libraries\Lang;
+
 class FastApp {
     protected static $instance;
 
     protected $Config;
-    protected $Routes;
-    protected $RoutesDynamic;
     protected $Patch;
     protected $Default;
 
+    protected $RequestURI;
+    protected $Route;
+
+    /**
+     * Obter instancia do framework
+     * @return FastApp
+     */
     public static function getInstance(){
+        if (is_null(self::$instance)){
+            self::$instance = new FastApp(true);
+        }
         return self::$instance;
+
     }
 
-    public function __construct(){
-        global $Config, $Routes, $DynamicRoutes;
+    /**
+     * Setups de configurações, rotas e bibliotecas
+     * FastApp constructor.
+     * @param bool $onlyLoad
+     */
+    public function __construct($onlyLoad = false){
         self::$instance = $this;
 
         $this->loadHelper("System");
+        $this->Config = getConfig();
 
-        //ROUTES
-        $this->Routes = $Routes;
-        $this->RoutesDynamic = $DynamicRoutes;
+        if ($onlyLoad) return;
 
-        //CONFIGS
-        $this->Config = $Config;
-        if ($this->Config['db_activedb']){
-            $this->initDatabase();
+        Lang::getInstance()->load("System");
+        loadFilesRoute();
+
+        //Load Helpers
+        try {
+            $HelpersLoads = getConfig('helpersLoad');
+            if (is_array($HelpersLoads)) {
+                foreach ($HelpersLoads as $helper) {
+                    $this->loadHelper($helper);
+                }
+            }
+        }catch (\Exception $exception){
+            DefaultErrors::getInstance()->ErrorXXX($exception->getCode(), $exception);
         }
+
+        //Set Connection
+        $this->initDatabase();
 
         //CONTROLLER & METHODS
-        $this->Default = str_replace([ $Config['base_dir'], $_SERVER['QUERY_STRING'], "?"],"",$_SERVER['REQUEST_URI']);
+        $this->RequestURI = getUriPatch();
+        $RequestMethod = $_SERVER['REQUEST_METHOD'];
 
-        $RequestURI = $this->Default;
-        $this->rePatch($RequestURI);
-        if (empty($this->Patch[0])) {
-            $RequestURI = $Config['default_route'];
+        $this->rePatch($this->RequestURI);
+        if (empty($this->Patch[0]) && !empty($this->Config['default_route'])) {
+            $this->RequestURI = $this->Config['default_route'];
+            $this->rePatch($this->RequestURI);
         }
 
-        $checkController = false;
-        if (isset($this->Routes[$RequestURI])){
-            if (is_array($this->Routes[$RequestURI]) && isset($this->Routes[$RequestURI]['Controller']) && isset($this->Routes[$RequestURI]['Method'])){
-                $checkController = true;
-            }else{
-                $RequestURI = $Config['default_route'];
+        if (!Routes::verifyRoute($this->RequestURI, $RequestMethod)) {
+            $nController = "\\Controller\\".$this->Patch[0];
+            $nMethod = isset($this->Patch[1]) ? $this->Patch[1] : "index";
+
+            if (!execute_class($nController, $nMethod)) {
+                goto OnNotFound;
             }
         }else{
-            foreach ($this->RoutesDynamic as $route => $args){
-                $key = str_replace([':any', ':num'], ['[^/]+', '[0-9]+'], $route);
-                if (preg_match('#^'.$key.'$#', $RequestURI, $matches)){
-                    $this->Routes[$matches[0]] = $args;
-                    $checkController = true;
-                    break;
-                }
+            $this->Route = Routes::getRoute($this->RequestURI, $RequestMethod);
+            Routes::validateRoute($this->Route);
+
+            execute_callbacks($this->Route, 'onCallBefore');
+
+            if (execute_class($this->Route['Controller'], $this->Route['Method'])) {
+                execute_callbacks($this->Route, 'onCallAfter');
+                return;
             }
+
+            goto OnNotFound;
         }
 
-        if (!$checkController) {
-            $this->rePatch($RequestURI);
-            $nController = "\\Controller\\" . $this->Patch[0];
-            $initController = null;
-            if (class_exists($nController)) {
-                $initController = new $nController();
-            }else{
-                redirect($Config['route_error_404']);
-            }
-            if (isset($this->Patch[1])) {
-                $nMethod = $this->Patch[1];
-                if (method_exists($initController, $nMethod)) {
-                    $initController->$nMethod();
-                }else{
-                    redirect($Config['route_error_404']);
-                }
-            }else{
-                redirect($Config['route_error_404']);
-            }
-        }else{
-            $nController = $this->Routes[$RequestURI]['Controller'];
-            $nMethod = $this->Routes[$RequestURI]['Method'];
-
-            if (isset($this->Routes[$RequestURI]['Type']) && $this->Routes[$RequestURI]['Type'] !== Response::ALL && $_SERVER['REQUEST_METHOD'] !== $this->Routes[$RequestURI]['Type']){
-                redirect($Config['route_error_404']);
-            }
-
-            if (isset($this->Routes[$RequestURI]['Headers']) && is_array($this->Routes[$RequestURI]['Headers'])){
-                foreach ($this->Routes[$RequestURI]['Headers'] as $header){
-                    Response::getInstance()->setHeader($header);
-                }
-            }
-            if (isset($this->Routes[$RequestURI]['RequireHeader']) && is_array($this->Routes[$RequestURI]['RequireHeader'])){
-                foreach ($this->Routes[$RequestURI]['RequireHeader'] as $key=>$header){
-                    if (Response::getInstance()->getHeader($key) !== $header){
-                        throw new \Exception("No have \"{$key}\" in request header");
-                    }
-                }
-            }
-            if (class_exists($nController)) {
-                $initController = new $nController();
-                if (method_exists($initController, $nMethod)) {
-                    $initController->$nMethod();
-                }else{
-                    redirect($Config['route_error_404']);
-                }
-            }else{
-                redirect($Config['route_error_404']);
-            }
-        }
-
-        //CLEAR URL
-        if (isset($this->Routes[$this->Default])){
-            $this->rePatch($this->Default);
+        OnNotFound:{
+            HooksRoutes::getInstance()->onNotFound();
         }
     }
 
-    public function getPatch($key){
-        return $this->Patch[$key];
-    }
-
-    public function getConfig($key){
-        return $this->Config[$key];
-    }
-
+    /**
+     * Explode nos paths do URL
+     * @param $Folder
+     */
     public function rePatch($Folder){
         $this->Patch = explode("/",$Folder);
     }
 
-    public function initDatabase(){
-        $database = new \stdClass();
-        $database->hostname = $this->Config['db_hostname'];
-        $database->database = $this->Config['db_database'];
-        $database->username = $this->Config['db_username'];
-        $database->password = $this->Config['db_password'];
+    /**
+     * Obter valor de um path da url
+     * @param $key int Número do indice
+     * @return null|string Retorna o valor do indice ou null se não existir
+     */
+    public function getPatch($key){
+        if (!isset($this->Patch[$key]))
+            return null;
 
-        $database->generate = $this->Config['db_generate'];
-        $database->generate_dir = BASE_PATH.'Models/'.$this->Config['db_generate_dir'];
-        $database->generate_base = $this->Config['db_generate_base_only'];
-
-        \MaikDatabase\Settings::getInstance()->createConnection($database, true, $this->Config['db_keyname']);
+        return $this->Patch[$key];
     }
 
+    /**
+     * Obter valores de configuração
+     * @param $key String indice da configuração que deseja
+     * @return mixed Retorna valor de configuração do indice definido
+     */
+    public function getConfig($key){
+        return $this->Config[$key];
+    }
+
+    /**
+     * Obter a url atual
+     * @return mixed
+     */
+    public function getUri(){
+        return $this->RequestURI;
+    }
+
+    /**
+     * Verifica se o valor passado é igual o da URL
+     * @param $uri String URL de comparação
+     * @return bool
+     */
+    public function isUri($uri){
+        if ($this->RequestURI === $uri){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Incluir helpers
+     * @param $file
+     * @throws null
+     */
     public function loadHelper($file){
+        $isFind = false;
+
         if (file_exists(BASE_PATH."Helpers/".$file.".php")) {
             require(BASE_PATH . "Helpers/" . $file . ".php");
-        }else if (file_exists(BASE_PATH."System/Helpers/".$file.".php")){
+            $isFind = true;
+        }
+        if (file_exists(BASE_PATH."System/Helpers/".$file.".php")){
             require(BASE_PATH."System/Helpers/".$file.".php");
-        }else{
-            new \Exception("File Helper {$file} not found");
+            $isFind = true;
+        }
+        if (!$isFind){
+            throw new \Exception("File Helper {$file} not found");
         }
     }
+
+    /**
+     * Inicia as configurações de banco de dados
+     */
+    private function initDatabase(){
+        if ($this->Config['db_driver']["isActive"] && (
+            !is_null($this->Config["db_driver"]['class']) ||
+            !empty($this->Config["db_driver"]['class'])
+            )){
+            if (class_exists($this->Config["db_driver"]['class'])){
+                $DriverClass = $this->Config["db_driver"]['class'];
+                /**
+                 * @var $Driver \System\Database\DriverImplements
+                 */
+                $Driver = new $DriverClass();
+                $Driver->createConnection($this->Config["db_driver"]["config"]);
+            }
+        }
+    }
+
+    /**
+     * Destruc, executado no final de tudo
+     */
+    public function __destruct(){
+        execute_callbacks($this->Route, 'onCallFinish');
+    }
+
 }

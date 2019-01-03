@@ -14,6 +14,9 @@ class Lang {
 	}
 
 	public static function getInstance() {
+	    if (is_null(self::$instance)){
+	        self::$instance = new Lang();
+        }
 		return self::$instance;
 	}
 
@@ -40,7 +43,7 @@ class Lang {
 			$idiom = FastApp::getInstance()->getConfig("lang");
 		}
 
-		if ($return === false && isset($this->is_loaded[$langfile]) && $this->is_loaded[$langfile] === $idiom) {
+		if ($return === false && isset($this->is_loaded[$idiom][$langfile])) {
 			return null;
 		}
 
@@ -72,7 +75,7 @@ class Lang {
 			return $lang;
 		}
 
-		$this->is_loaded[$langfile] = $idiom;
+		$this->is_loaded[$idiom][$langfile] = $idiom;
 		$this->language = array_merge($this->language, $lang);
 
 		return true;

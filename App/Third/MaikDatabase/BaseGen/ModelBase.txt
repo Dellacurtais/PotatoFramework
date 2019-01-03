@@ -3,7 +3,7 @@ namespace Models\Base;
 
 use MaikDatabase\BaseModel;
 
-abstract class Base_%NAMECLASS% extends BaseModel {
+abstract class Base%NAMECLASS% extends BaseModel {
 
     public function initTableDefinitions(){
         $this->setTable("%NAMEDB%");

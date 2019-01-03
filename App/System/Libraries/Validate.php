@@ -16,6 +16,14 @@ class Validate {
     const URL = "url";
     const MONEY = "money";
 
+    /**
+     * Validate String
+     * @param $Sting
+     * @param array $args
+     * @param string $Tipo
+     * @param string $function
+     * @return mixed
+     */
     public function validate($Sting, $args = array(), $Tipo = 'varchar', $function = ""){
         if (!in_array($Tipo,Validate::$Type)){
             $Tipo = "varchar";
@@ -38,6 +46,12 @@ class Validate {
         return $this->varchar;
     }
 
+    /**
+     * Validate type String
+     * @param $str
+     * @param $args
+     * @return bool
+     */
     private function _varchar($str, $args){
         if (isset($args['min']) && is_numeric($args['min'])){
             if (!isset($str{$args['min']-1})){
@@ -52,6 +66,12 @@ class Validate {
         return $str;
     }
 
+    /**
+     * Validate type int
+     * @param $str
+     * @param $args
+     * @return bool
+     */
     private function _int($str, $args){
         if (isset($args['min']) && is_numeric($args['min'])){
             if ($str < $args['min']){
@@ -69,6 +89,12 @@ class Validate {
         return false;
     }
 
+    /**
+     * Validate Type Float
+     * @param $str
+     * @param $args
+     * @return bool|mixed
+     */
     private function _float($str, $args){
         $value = str_replace(",","",$str);
         if (isset($args['min']) && is_numeric($args['min'])){
@@ -87,6 +113,12 @@ class Validate {
         return false;
     }
 
+    /**
+     * Validate Only Alpha
+     * @param $str
+     * @param $args
+     * @return bool
+     */
     private function _onlyAlpha($str, $args){
         if (isset($args['min']) && is_numeric($args['min'])){
             if (!isset($str{$args['min']-1})){
@@ -104,6 +136,12 @@ class Validate {
         return false;
     }
 
+    /**
+     * Validate Alphanumeric
+     * @param $str
+     * @param $args
+     * @return bool
+     */
     private function _onlyAlphanumeric($str, $args){
         if (isset($args['min']) && is_numeric($args['min'])){
             if (!isset($str{$args['min']-1})){
@@ -121,6 +159,12 @@ class Validate {
         return false;
     }
 
+    /**
+     * Validate Date
+     * @param $date
+     * @param $args
+     * @return bool
+     */
     private function _date($date, $args){
         if (isset($args['format'])){
             $this->format = $args['format'];
@@ -166,6 +210,12 @@ class Validate {
         return false;
     }
 
+    /**
+     * Validate E-mail format
+     * @param $value
+     * @param $args
+     * @return bool
+     */
     private function _email($value, $args) {
         if (filter_var($value, FILTER_VALIDATE_EMAIL)){
             return $value;
@@ -173,6 +223,12 @@ class Validate {
         return false;
     }
 
+    /**
+     * Validate format URL
+     * @param $value
+     * @param $args
+     * @return bool
+     */
     private function _url($value, $args) {
         if (filter_var($value, FILTER_VALIDATE_URL)){
             return $value;
@@ -180,6 +236,12 @@ class Validate {
         return false;
     }
 
+    /**
+     * Validate Money format
+     * @param $value
+     * @param $args
+     * @return bool
+     */
     private function _money($value, $args){
         preg_match("/\b\d{1,3}(?:,?\d{3})*(?:\.\d{2})?\b/", $value, $From);
         if (isset($From[0])){

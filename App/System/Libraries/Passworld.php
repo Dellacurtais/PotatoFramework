@@ -8,13 +8,12 @@ class Passworld {
     protected static $cost = 10;
 
     public static function checkCost(){
-        $Hash = FastApp::getInstance()->getConfig("encrypt_key");
         $timeTarget = 0.05;
         $cost = 8;
         do {
             $cost++;
             $start = microtime(true);
-            password_hash("teste", PASSWORD_BCRYPT, ["salt" => $Hash,"cost" => $cost]);
+            password_hash("teste", PASSWORD_BCRYPT, ["cost" => $cost]);
             $end = microtime(true);
         } while (($end - $start) < $timeTarget);
         echo "Appropriate Cost Found: " . $cost;
@@ -22,7 +21,6 @@ class Passworld {
 
     public static function getPassworld($passworld){
         return password_hash($passworld, PASSWORD_BCRYPT, [
-            "salt" => FastApp::getInstance()->getConfig("encrypt_key"),
             "cost" => self::$cost
         ]);
     }

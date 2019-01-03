@@ -7,20 +7,31 @@ require_once( BASE_PATH_THIRD.'Smarty/Smarty.class.php' );
 
 class Smarty extends \Smarty {
 
+    protected static $instance;
     public $debug = false;
+
+    public static function getInstance(){
+        if (is_null(self::$instance)) {
+            self::$instance = new Smarty();
+        }
+        return self::$instance;
+    }
 
     /**
      * Smarty constructor.
      */
     public function __construct(){
         parent::__construct();
-
         $this->template_dir = BASE_PATH . "Views/";
         $this->compile_dir = BASE_PATH_CACHE . "/Template";
-        if (!is_writable($this->compile_dir)){
-            @chmod( $this->compile_dir, 0777 );
+        if (!is_writable($this->compile_dir)) {
+            @chmod($this->compile_dir, 0777);
         }
-        $this->loadFilter('output', 'trimwhitespace');
+
+        try {
+            $this->loadFilter('output', 'trimwhitespace');
+        } catch (\SmartyException $ignore) {
+        }
     }
 
     /**

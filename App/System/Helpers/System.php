@@ -1,5 +1,12 @@
 <?php
 if (!function_exists('redirect')){
+    /**
+     * Redirecionamento de página
+     * By Codeigniter
+     * @param string $uri url ou rota a redirecionar
+     * @param string $method methodo do redirecionamento
+     * @param int $code código do redirencionamento
+     */
     function redirect($uri = '', $method = 'auto', $code = NULL){
         if ( ! preg_match('#^(\w+:)?//#i', $uri)) {
             $uri = base_url($uri);
@@ -28,6 +35,11 @@ if (!function_exists('redirect')){
 }
 
 if (!function_exists("_uri_string")) {
+    /**
+     * Contruir query string
+     * @param $uri
+     * @return string
+     */
     function _uri_string($uri){
         global $Config;
         if ($Config['enable_query_strings'] === FALSE) {
@@ -41,6 +53,12 @@ if (!function_exists("_uri_string")) {
 }
 
 if (!function_exists("base_url")) {
+    /**
+     * Obter url completa de uma rota
+     * @param string $uri rota
+     * @param null $protocol protocolo da rota Ex: http, https, ftp etc...
+     * @return string url completa da rota
+     */
     function base_url($uri = '', $protocol = NULL){
         $base_url = slash_item('base_url');
         if (isset($protocol)) {
@@ -54,7 +72,46 @@ if (!function_exists("base_url")) {
     }
 }
 
+if (!function_exists("getQuery")) {
+    /**
+     * Obter todos os parametos passador por GET
+     * @param array $removeKeys remover parametros especificos
+     * @param bool $hasGet retornar com & se true ou ou ? se false
+     * @return string query string
+     */
+    function getQuery($removeKeys = [], $hasGet = false){
+        $Query = $_SERVER['QUERY_STRING'];
+        parse_str($Query, $get_array);
+
+        foreach ($removeKeys as $key) {
+            if (isset($get_array[$key]))
+                unset($get_array[$key]);
+        }
+
+        if ($hasGet)
+            return "&" . http_build_query($get_array);
+
+        return "?" . http_build_query($get_array);
+    }
+}
+
+if (!function_exists("assets")) {
+    /**
+     * Carregar arquivos de layout na pasta setada nas configurações
+     * @param $file String nome do arquivo desejado
+     * @return string retorna url completa do arquivo
+     */
+    function assets($file){
+        global $Config;
+        return base_url($Config['base_dir_assets'].$file);
+    }
+}
+
 if (!function_exists("slash_item")) {
+    /**
+     * @param $item
+     * @return null|string
+     */
     function slash_item($item){
         global $Config;
         if (!isset($Config[$item])){
@@ -67,19 +124,30 @@ if (!function_exists("slash_item")) {
 }
 
 if (!function_exists("ramdomCode")) {
+    /**
+     * Gerar string aléatoria
+     * @param int $tamanho tamanho da string que deseja gerar
+     * @return string
+     */
     function ramdomCode($tamanho = 8) {
         $retorno = '';
         $caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
         $len = strlen($caracteres);
         for ($n = 1; $n <= $tamanho; $n++) {
             $rand = mt_rand(1, $len);
-            $retorno .= $caracteres[$rand-1];
+            $retorno .= str_shuffle($caracteres)[$rand-1];
         }
         return $retorno;
     }
 }
 
 if (!function_exists("dateToTime")) {
+    /**
+     * Converter formato de data para timestamp
+     * @param $date String Data desejada
+     * @param string $format Formato da data passada
+     * @return bool|int
+     */
     function dateToTime($date, $format = "YYYY-MM-DD"){
         switch ($format) {
             case 'YYYY/MM/DD':
@@ -115,5 +183,120 @@ if (!function_exists("dateToTime")) {
                 return false;
         }
         return mktime(0, 0, 0, $m, $d, $y);
+    }
+}
+
+if (!function_exists("str_replace_first")) {
+    /**
+     * Substituir primeira ocorrencia
+     * @param $from
+     * @param $to
+     * @param $content
+     * @return null|string|string[]
+     */
+    function str_replace_first($from, $to, $content){
+        $from = '/' . preg_quote($from, '/') . '/';
+        return preg_replace($from, $to, $content, 1);
+    }
+}
+
+if (!function_exists('getConfig')){
+    /**
+     * Obter valor de Config especifica
+     * @param $key
+     * @return mixed
+     */
+    function getConfig($key = null){
+        global $Config;
+        if (is_null($key))
+            return $Config;
+
+        return $Config[$key];
+    }
+}
+
+if (!function_exists('apiSuccessCall')) {
+    /**
+     * Retorna um JSON de sucesso
+     * @param $data
+     * @param string $msg
+     * @param int $code
+     * @return false|string
+     */
+    function apiSuccessCall($data, $msg = '', $code = 200){
+        return \System\Core\HooksRoutes::getInstance()->apiSuccessCallJson($data, $msg, $code);
+    }
+}
+
+if (!function_exists('apiErrorCall')) {
+    /**
+     * Retorna um JSON de erro
+     * @param $data
+     * @param string $msg
+     * @param int $code
+     * @return false|string
+     */
+    function apiErrorCall($msg, $code = 404){
+        return \System\Core\HooksRoutes::getInstance()->apiErrorCallJson($msg, $code);
+    }
+}
+
+if (!function_exists('getDatetime')) {
+    /**
+     * Obter data no momento (Formato para MySQL)
+     * @return false|string
+     */
+    function getDatetime(){
+        return date("Y-m-d H:i:s");
+    }
+}
+
+if (!function_exists('execute_callbacks')){
+    function execute_callbacks($callback, $type){
+        if (isset($callback[$type]) && !is_null($callback[$type])){
+            if (is_array($callback[$type])){
+                foreach ($callback[$type] as $callsback){
+                    $onCallClass = $callsback[0];
+                    $methodCall = $callsback[1];
+                    $onCallInit = new $onCallClass();
+                    $onCallInit->$methodCall($callback, $callsback);
+                }
+            }else {
+                $callback[$type]($callback);
+            }
+        }
+    }
+}
+
+
+if (!function_exists('execute_class')){
+    function execute_class($class, $method){
+        if (class_exists($class)) {
+            $initClass = new $class();
+            if (method_exists($initClass, $method)) {
+                $initClass->$method();
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+if (!function_exists('getUriPatch')) {
+    function getUriPatch(){
+        $str = str_replace_first(getConfig('base_dir'), "", $_SERVER['REQUEST_URI']);
+        $str = str_replace([$_SERVER['QUERY_STRING'], "?"], "", $str);
+        return $str;
+    }
+}
+
+if (!function_exists('loadFilesRoute')) {
+    function loadFilesRoute(){
+        $Routes = getConfig("files_route");
+        foreach ($Routes as $file){
+            if (file_exists(BASE_PATH."Configs/Routes/{$file}.php")) {
+                include_once(BASE_PATH . "Configs/Routes/{$file}.php");
+            }
+        }
     }
 }

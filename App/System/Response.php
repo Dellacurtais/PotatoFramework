@@ -1,20 +1,24 @@
 <?php
 namespace System;
 
-class Response extends ResponseType {
+class Response {
+
     protected static $instance = null;
+    protected $responseHeader = [];
 
-    protected $allHeaders;
-
+    const ALL = "ALL";
     const GET = "GET";
     const POST = "POST";
     const PUT = "PUT";
     const DELETE = "DELETE";
+    const PATCH = "PATCH";
+    const OPTIONS = "OPTIONS";
+    const HEAD = "HEAD";
 
-    const ALL = "ALL";
-
-    const REQUEST = "REQUEST";
-
+    /**
+     * Obter instancia da class
+     * @return null|Response
+     */
     public static function getInstance(){
         if (is_null(self::$instance)){
             self::$instance = new Response();
@@ -22,51 +26,46 @@ class Response extends ResponseType {
         return self::$instance;
     }
 
-    public static function xssClear(){
-        $_GET   = filter_input_array(INPUT_GET, FILTER_SANITIZE_STRING);
-        $_POST  = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-    }
-
-    public static function get($key, $xss = 0){
-        if ($xss)
-            return filter_input(INPUT_GET, $key, FILTER_SANITIZE_STRING);
-
-        return $_GET[$key];
-    }
-
-    public static function post($key, $xss = 0){
-        if ($xss)
-            return filter_input(INPUT_POST, $key, FILTER_SANITIZE_STRING);
-
-        return $_POST[$key];
-    }
-
-    public function request($key, $xss = 0){
-        if ($xss)
-            return filter_input(INPUT_REQUEST, $key, FILTER_SANITIZE_STRING);
-
-        return $_REQUEST[$key];
-    }
-
-    public function __construct(){
-        $this->allHeaders = getallheaders();
-    }
-
-    public function getHeader($key){
-        return $this->allHeaders[$key];
-    }
-
+    /**
+     * Setar um cabeçalho para requisição atual
+     * @param $key
+     * @param null $value
+     */
     public function setHeader($key,$value = null){
-        if (is_null($value))
+        if (is_null($value)) {
+            $Get = explode(":", $key);
+            $this->responseHeader[$Get[0]] = isset($Get[1]) ? $Get[1] : null;
             header($key);
-        else
+        }else{
+            $this->responseHeader[$key] = $value;
             header("{$key}:{$value}");
+        }
     }
 
+    /**
+     * Obter um cabeçalho para requisição atual
+     * @param $key
+     * @return mixed
+     */
+    public function getResponseHeader($key){
+        return $this->responseHeader[$key];
+    }
+
+    /**
+     * Definir o tipo do conteudo da página
+     * @param $type
+     */
     public function setHeaderType($type){
         $this->setHeader("Content-Type", $type);
     }
 
+    /**
+     * Criar json simples para requisições ajax, api, etc...
+     * @param $msg
+     * @param null $data
+     * @param bool $response
+     * @return false|string
+     */
     public function encodeJson($msg, $data = null, $response = false){
         return json_encode(["msg" => $msg, "data" => $data, "responseError" => $response]);
     }

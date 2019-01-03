@@ -8,6 +8,10 @@ class Crypt {
 
     /**
      * @author fonte php.net
+     * @param $plaintext
+     * @param string $cipher
+     * @param int $options
+     * @return string
      */
     public static function encrpyt($plaintext, $cipher = "AES-256-CBC", $options = OPENSSL_RAW_DATA){
         $key = FastApp::getInstance()->getConfig("encrypt_key");
@@ -21,6 +25,10 @@ class Crypt {
 
     /**
      * @author fonte php.net
+     * @param $ciphertext
+     * @param string $cipher
+     * @param int $options
+     * @return bool|string
      */
     public static function decrypt($ciphertext, $cipher = "AES-256-CBC", $options = OPENSSL_RAW_DATA){
         $key = FastApp::getInstance()->getConfig("encrypt_key");

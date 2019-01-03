@@ -8,6 +8,9 @@ use MaikDatabase\Generate;
 
 class Database {
     public $config;
+    /**
+     * @var \PDO
+     */
     public $db;
 
     function __construct($config) {
@@ -39,13 +42,24 @@ class Database {
         }
     }
 
-    function count($sql){
-        return $this->db->query($sql)->fetchColumn();
+    function count($sql, $bind = array()){
+        $sql = trim($sql);
+        try {
+            $result = $this->db->prepare($sql);
+            $result->execute($bind);
+            return $result->fetchColumn();
+        } catch (\PDOException $e) {
+            echo $e->getMessage(); exit(1);
+        }
     }
 
-    function run($sql, $bind=array()) {
+    /**
+     * @param $sql
+     * @param array $bind
+     * @return bool|\PDOStatement
+     */
+    function run($sql, $bind = array()) {
         $sql = trim($sql);
-
         try {
             $result = $this->db->prepare($sql);
             $result->execute($bind);
@@ -170,7 +184,7 @@ class Database {
                 );
                 $Generate->setColun($Array);
             }
-            $Generate->generate($this->config->generate_dir, $this->config->generate_base);
+            $Generate->generate($this->config->generate_dir, $this->config->generate_base, $this->config->generate_replace);
         }
     }
 

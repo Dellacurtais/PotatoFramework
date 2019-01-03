@@ -1,15 +1,15 @@
 <?php
 namespace Models;
 
-use Models\Base\Base_%NAMECLASS%;
+use Models\Base\Base%NAMECLASS%;
 
-class Model_%NAMECLASS% extends Base_%NAMECLASS% {
+class Model%NAMECLASS% extends Base%NAMECLASS% {
 
     protected static $_instance;
 
-    public static function init_instance(){
+    public static function getInstance(){
         if (is_null(self::$_instance)){
-            self::$_instance = new static();
+            self::$_instance = new Model%NAMECLASS%();
         }
         return self::$_instance;
     }

@@ -1,7 +1,8 @@
 <?php
 namespace Controller;
 
-use System\Controller;
+
+use System\Core\Controller;
 
 class Index extends Controller {
 
@@ -9,12 +10,10 @@ class Index extends Controller {
         parent::__construct();
     }
 
-    /**
-     * Default Route Method
-     * @return null
-     */
-    public function Home(){
-
+    public function Index(){
+        $this->view("Layout/Content",[
+            "layout" => "welcome.tpl"
+        ]);
     }
 
 }

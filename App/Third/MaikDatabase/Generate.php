@@ -14,8 +14,8 @@ class Generate {
     public $modelInit;
     public $colunInit;
 
-    public $ModelName = "Model_";
-    public $BaseName = "Base_";
+    public $ModelName = "Model";
+    public $BaseName = "Base";
 
     public $Name = "";
 
@@ -47,7 +47,7 @@ class Generate {
         $this->colunInit .= $Coluna;
     }
 
-    public function generate($dir, $onlyBase = false){
+    public function generate($dir, $onlyBase = false, $replaceFile = true){
         $this->baseInit = str_replace("%COLLUNSSET%", $this->colunInit, $this->baseInit);
 
         if (!is_dir($dir)){
@@ -58,12 +58,15 @@ class Generate {
         }
 
         $FileBase = $dir."/Base/".$this->BaseName.$this->Name.".php";
-        $FileModel = $dir."/Model_".$this->Name.".php";
+        $FileModel = $dir."/".$this->ModelName.$this->Name.".php";
 
-        file_put_contents($FileBase, $this->baseInit);
-
+        if ($replaceFile || (!$replaceFile && !file_exists($FileBase))){
+            file_put_contents($FileBase, $this->baseInit);
+        }
         if (!$onlyBase) {
-            file_put_contents($FileModel, $this->modelInit);
+            if ($replaceFile || (!$replaceFile && !file_exists($FileModel))){
+                file_put_contents($FileModel, $this->modelInit);
+            }
         }
     }
 }
