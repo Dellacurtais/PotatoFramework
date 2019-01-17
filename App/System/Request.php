@@ -159,6 +159,30 @@ class Request {
     }
 
     /**
+     * Verifica em todos os paramêtos e retorna o que achar primeiro
+     * @param $key string
+     * @return mixed
+     */
+    public static function find($key){
+        if (is_null($key))
+            return null;
+
+        if (isset($_GET[$key]))
+            return $_GET[$key];
+
+        if (isset($_POST[$key]))
+            return $_POST[$key];
+
+        if (isset(self::$paramJson[$key]))
+            return self::$paramJson[$key];
+
+        if (isset(self::$extra[$key]))
+            return self::$extra[$key];
+
+        return null;
+    }
+
+    /**
      * Obter um cabeçalho especifico passado na requisição
      * @param null $key
      * @return array|false|null

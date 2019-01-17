@@ -1,8 +1,6 @@
 <?php
 namespace System\Libraries;
 
-use System\FastApp;
-
 class Passworld {
 
     protected static $cost = 10;

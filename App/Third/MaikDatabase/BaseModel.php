@@ -34,7 +34,7 @@ class BaseModel extends Property {
     protected $___SqlQuery;
     protected $___Pagination;
 
-    public $isOnCreateUpdateAt = false;
+    protected $isOnCreateUpdateAt = false;
     const CREATEAT = "createAt";
     const UPDATEAT = "updateAt";
 
@@ -339,6 +339,7 @@ class BaseModel extends Property {
     /**
      * Procurar todos na tabela
      * @param null $other
+     * @param bool $onlyOne
      * @return array
      */
     public function find($other = null){
@@ -503,7 +504,7 @@ class BaseModel extends Property {
 
         $selectColuns = $isSelect ? $setSelect : implode(', ',$Fields);
 
-        $this->___SqlQuery = "SELECT " . $selectColuns . " FROM " . $this->getTableSelect() . implode('', $Joins) . $Where. $GroupBy . $OrderBy ."".$Limit;
+        $this->___SqlQuery = "SELECT " . $selectColuns . " FROM " . $this->getTableSelect() . implode('', $Joins) . $Where. $GroupBy . $OrderBy ." ".$Limit;
         $result = $this->___Connection->run($this->___SqlQuery, $BindValues);
         $result->setFetchMode(\PDO::FETCH_ASSOC);
 

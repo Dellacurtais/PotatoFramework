@@ -109,3 +109,15 @@ if (!function_exists('getallheaders')) {
         return $headers;
     }
 }
+
+if (!function_exists("getViewPhp")){
+    /**
+     * Get HTML template PHP
+     * @param $_file
+     * @param array $data
+     */
+    function getViewPhp($_file, $data = array()){
+        extract($data);
+        include BASE_PATH . "Views/" . $_file;
+    }
+}

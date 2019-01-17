@@ -107,7 +107,7 @@ class Forms {
         if (!is_null($NameForm)) {
             $TokenForm = Request::getInstance()->$Method($NameForm);
             if (!$this->validToken($NameForm, $TokenForm)) {
-                $this->errors[$NameForm] = Lang::getInstance()->line("form_invalid_token");
+                $this->errors[$NameForm] = Lang::get("form_invalid_token");
                 return;
             }
         }
@@ -118,7 +118,7 @@ class Forms {
             try {
                 $isRequire = $args[0];
                 if ($isRequire && (empty($Value) || is_null($Value))){
-                    $this->errors[$input] = Lang::getInstance()->line_replace("form_require",":attr:", Lang::getInstance()->line($input));
+                    $this->errors[$input] = Lang::get("form_require",":attr:", Lang::get("input_{$input}"));
                 }else{
                     if (is_array($args[1])){
                         $Class = $args[1][0];
@@ -128,7 +128,7 @@ class Forms {
                             if (!is_null($args[3])){
                                 $msgError = $args[3];
                             }else{
-                                $msgError = Lang::getInstance()->line("input_error_{$input}");
+                                $msgError = Lang::get("input_error_{$input}");
                             }
                             $this->errors[$input] = $msgError;
                         }
@@ -139,7 +139,7 @@ class Forms {
                             if (!is_null($args[3])){
                                 $msgError = $args[3];
                             }else{
-                                $msgError = Lang::getInstance()->line("input_error_{$input}");
+                                $msgError = Lang::get("input_error_{$input}");
                             }
                             $this->errors[$input] = $msgError;
                         }

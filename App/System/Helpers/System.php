@@ -258,6 +258,7 @@ if (!function_exists('execute_callbacks')){
                 foreach ($callback[$type] as $callsback){
                     $onCallClass = $callsback[0];
                     $methodCall = $callsback[1];
+
                     $onCallInit = new $onCallClass();
                     $onCallInit->$methodCall($callback, $callsback);
                 }

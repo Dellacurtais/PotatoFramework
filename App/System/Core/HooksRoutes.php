@@ -22,9 +22,8 @@ class HooksRoutes {
     public function apiErrorCallJson($msg, $responseCode = 200){
         $Data = [];
         $Data['responseCode'] = $responseCode;
-        $Data['response'] = [];
+        $Data['response'] = null;
         $Data['hasError'] = true;
-        $Data['hasSuccess'] = false;
         $Data['message'] = $msg;
         $Data['time'] = time();
         return json_encode($Data);
@@ -35,7 +34,6 @@ class HooksRoutes {
         $Data['responseCode'] = $responseCode;
         $Data['response'] = $data;
         $Data['hasError'] = false;
-        $Data['hasSuccess'] = true;
         $Data['message'] = $msg;
         $Data['time'] = time();
         return json_encode($Data);
@@ -67,11 +65,12 @@ class HooksRoutes {
 
     public function onNotFound(){
         global $Config;
+        Response::getInstance()->setHeader("Content-Type: ".$Config['error_content_type']);
         foreach ($Config['error_extra_headers'] as $header){
             Response::getInstance()->setHeader($header);
         }
         if ($Config['error_content_type'] == ResponseType::CONTENT_JSON){
-            echo HooksRoutes::apiErrorCallJson(Lang::getInstance()->line("error404"), 404);
+            echo HooksRoutes::apiErrorCallJson(Lang::get("error404"), 404);
             exit();
         }else{
             DefaultErrors::getInstance()->Error404();

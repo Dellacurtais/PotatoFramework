@@ -1,34 +1,8 @@
-<?php
-/* Smarty version 3.1.30, created on 2018-11-26 21:10:21
-  from "/Applications/AMPPS/www/Potato/App/Views/Error/Error404.tpl" */
-
-/* @var Smarty_Internal_Template $_smarty_tpl */
-if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
-  'version' => '3.1.30',
-  'unifunc' => 'content_5bfc7d5de030c8_98086921',
-  'has_nocache_code' => false,
-  'file_dependency' => 
-  array (
-    'd53e97ec26fa0fdc2fc1d95cf1745f096984ac67' => 
-    array (
-      0 => '/Applications/AMPPS/www/Potato/App/Views/Error/Error404.tpl',
-      1 => 1541483434,
-      2 => 'file',
-    ),
-  ),
-  'includes' => 
-  array (
-  ),
-),false)) {
-function content_5bfc7d5de030c8_98086921 (Smarty_Internal_Template $_smarty_tpl) {
-?>
 <!DOCTYPE html>
-<html lang="<?php echo $_smarty_tpl->tpl_vars['FastApp']->value->getConfig("lang");?>
-">
+<html lang="<?=\System\FastApp::getInstance()->getConfig("lang")?>">
 <head>
     <meta charset="UTF-8">
-    <title><?php echo $_smarty_tpl->tpl_vars['Lang']->value->line("error404");?>
-</title>
+    <title><?=\System\Libraries\Lang::getInstance()->line("error404")?></title>
     <link href="https://fonts.googleapis.com/css?family=Raleway:400,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Passion+One:900" rel="stylesheet">
 </head>
@@ -38,13 +12,9 @@ function content_5bfc7d5de030c8_98086921 (Smarty_Internal_Template $_smarty_tpl)
             <div class="notfound-404">
                 <h1>:(</h1>
             </div>
-            <h2><?php echo $_smarty_tpl->tpl_vars['Lang']->value->line("error404_title");?>
-</h2>
-            <p><?php echo $_smarty_tpl->tpl_vars['Lang']->value->line("error404");?>
-</p>
-            <a href="<?php echo base_url($_smarty_tpl->tpl_vars['FastApp']->value->getConfig("default_route"));?>
-"><?php echo $_smarty_tpl->tpl_vars['Lang']->value->line("error404_btn");?>
-</a>
+            <h2><?=\System\Libraries\Lang::getInstance()->line("error404_title")?></h2>
+            <p><?=\System\Libraries\Lang::getInstance()->line("error404")?></p>
+            <a href="<?=base_url(\System\FastApp::getInstance()->getConfig("default_route"))?>"><?=\System\Libraries\Lang::getInstance()->line("error404_btn")?></a>
         </div>
     </div>
     <style scoped>
@@ -52,5 +22,3 @@ function content_5bfc7d5de030c8_98086921 (Smarty_Internal_Template $_smarty_tpl)
         </style>
     </body>
 </html>
-<?php }
-}

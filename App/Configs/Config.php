@@ -3,8 +3,8 @@ $Config = array();
 
 $Config['name_project'] = "API SigPolítico";
 
-$Config['base_dir'] = "/Potato/";
-$Config['base_url'] = "http://127.0.0.1/Potato/";
+$Config['base_dir'] = "/potato/";
+$Config['base_url'] = "http://127.0.0.1/potato/";
 
 /**
  * Load Files Route
@@ -30,7 +30,7 @@ $Config['encrypt_key'] = "default";
  * DATABASE CONFIG
  */
 $Config['db_driver'] = [
-    "isActive" => true,
+    "isActive" => false,
     "class" => \System\Database\MaikDriver::class, //Class Driver para setup de conexão com banco de dados
     "config" => [
         "db_hostname" => "localhost",
@@ -63,9 +63,11 @@ $Config['lang'] = "pt-br";
 
 /**
  * Template Engine
- * TEMPLATE_ENGINE_SMARTY = Usar Smarty template (APENAS SMARTY NESTA VERSÃO)
+ * TEMPLATE_ENGINE_SMARTY Use Smarty Template
+ * TEMPLATE_WITHOUT_ENGINE Use direct PHP file
+ *
  */
-$Config['template'] = TEMPLATE_ENGINE_SMARTY;
+$Config['template'] = TEMPLATE_WITHOUT_ENGINE;
 
 /**
  * Timezone

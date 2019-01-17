@@ -45,6 +45,20 @@ class Routes {
         self::setRoute($type, $route, $configs);
     }
 
+    public static function group($type, $base, $controllers, $config){
+        foreach ($controllers as $route => $controller){
+            $configs = array_merge($config, $controller);
+            if (!empty($route)) {
+                $route = "{$base}/{$route}";
+            }else{
+                $route = $base;
+            }
+
+            $finalRoute = str_replace("//", "/", $route);
+            self::other($type, $finalRoute, $configs);
+        }
+    }
+
     public static function getRoute($route, $method){
         if (isset(self::$Routes[$route][$method])){
             return self::$Routes[$route][$method];
@@ -62,9 +76,9 @@ class Routes {
         if (isset(self::$Routes[$route][Response::ALL])){
             return true;
         }
-        foreach (self::$DynamicRoutes as $route => $nRoute){
+        foreach (self::$DynamicRoutes as $dRoute => $nRoute){
             foreach ($nRoute as $type => $args){
-                $key = str_replace([':any', ':num'], ['[^/]+', '[0-9]+'], $route);
+                $key = str_replace([':any', ':num'], ['[^/]+', '[0-9]+'], $dRoute);
                 if (preg_match('#^'.$key.'$#', $route, $matches)){
                     self::$Routes[$matches[0]][$type] = $args;
                     return true;
@@ -91,8 +105,9 @@ class Routes {
     }
 
     protected static function setRoute($method, $route, $configs){
-        if (strpos(":any",$route) !== false || strpos(":num",$route) !== false){
+        if (strpos($route, "(:any)") !== false || strpos($route,"(:num)") !== false){
             self::$DynamicRoutes[$route][$method] = $configs;
+            return;
         }
         self::$Routes[$route][$method] = $configs;
     }

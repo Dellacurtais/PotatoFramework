@@ -1,10 +1,13 @@
 <?php
+use \System\Core\Routes as Routes;
+use \System\ResponseType as ResponseType;
+use \Controller\Index as Index;
 
-\System\Core\Routes::get('Welcome', [
-    'Controller' => \Controller\Index::class,
+Routes::get('Welcome', [
+    'Controller' => Index::class,
     "Method" => "Index",
     'Headers' => [
-        "Content-Type:".\System\ResponseType::CONTENT_HTML,
+        "Content-Type:".ResponseType::CONTENT_HTML,
     ],
     'RequireHeader' => [],
     'onCallBefore' => [],

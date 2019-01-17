@@ -2,6 +2,7 @@
 namespace System\Core;
 
 use System\FastApp;
+use System\Libraries\HtmlBlocks;
 use System\Libraries\Lang as Lang;
 use System\Libraries\Session as Session;
 use System\Libraries\Smarty as Smarty;
@@ -64,20 +65,34 @@ class Controller {
      * @param $file string nome do view
      * @param array $data parametros pro view
      * @param bool $return bool true para retornar o HTML
+     * @return null|string
      */
-    public function view($file, $data = array(), $return = false){
+    public function setView($file, $data = array(), $return = false){
         if ($this->hasEngine == TEMPLATE_ENGINE_SMARTY) {
-            $this->smarty->view($file.".tpl", $data, $return);
+            return $this->smarty->view($file.".tpl", $data, $return);
+        }else{
+            return $this->setViewWithoutTemplate($file,$data, $return);
         }
     }
 
     /**
      * View default sem template
-     * @param $file
+     * @param $_file_
      * @param array $data
+     * @param bool $return
+     * @return null|string
      */
-    public function viewfile($file, $data = array()){
-        extract($data);
-        include BASE_PATH . "Views/".$file.".php";
+    public function setViewWithoutTemplate($_file_, $data = array(), $return = false){
+        if ($return){
+            extract($data);
+            HtmlBlocks::getInstance()->initBlock();
+                include BASE_PATH . "Views/" . $_file_ . ".php";
+            HtmlBlocks::getInstance()->endBlock("GetTemplate");
+            return HtmlBlocks::getInstance()->getBlocks("GetTemplate", 0);
+        }else{
+            extract($data);
+            include BASE_PATH . "Views/" . $_file_ . ".php";
+            return null;
+        }
     }
 }

@@ -170,8 +170,8 @@ class FastApp {
      */
     private function initDatabase(){
         if ($this->Config['db_driver']["isActive"] && (
-            !is_null($this->Config["db_driver"]['class']) ||
-            !empty($this->Config["db_driver"]['class'])
+                !is_null($this->Config["db_driver"]['class']) ||
+                !empty($this->Config["db_driver"]['class'])
             )){
             if (class_exists($this->Config["db_driver"]['class'])){
                 $DriverClass = $this->Config["db_driver"]['class'];
