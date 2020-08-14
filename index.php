@@ -10,11 +10,6 @@ define("BASE_PATH_VIEWS", __DIR__."/App/Views/");
 define("TEMPLATE_ENGINE_SMARTY","smarty");
 define("TEMPLATE_WITHOUT_ENGINE","without");
 
-if ($_SERVER['REQUEST_METHOD'] == "GET" && strpos($_SERVER['SCRIPT_URI'], "https://www.") !== false){
-    $url = str_replace("https://www.", "https://", $_SERVER['SCRIPT_URI']);
-    header("Location: {$url}");
-}
-
 switch (ENVIRONMENT){
     case 'development':
         error_reporting(-1);
