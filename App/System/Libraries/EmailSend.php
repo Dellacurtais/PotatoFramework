@@ -30,36 +30,47 @@ class EmailSend {
     }
 
     public function initConfig(){
-        global $Config;
-
+        $Config = getConfig("Email");
         $this->config = Array(
             'protocol' => 'smtp',
-            'smtp_host' => $Config["Email"]["smtp_host"],
-            'smtp_port' => $Config["Email"]["smtp_port"],
-            'smtp_user' => $Config["Email"]["smtp_user"],
-            'smtp_pass' => $Config["Email"]["smtp_pass"],
+            'smtp_host' => $Config["smtp_host"],
+            'smtp_port' => $Config["smtp_port"],
+            'smtp_user' => $Config["smtp_user"],
+            'smtp_pass' => $Config["smtp_pass"],
             'mailtype'  => 'html',
             'charset'   => 'utf-8'
         );
-        $this->from['email'] = $Config["Email"]["smtp_user"];
-        $this->from['nome'] = $Config["Email"]["smtp_name"];
+        $this->from['email'] = $Config["smtp_user"];
+        $this->from['nome'] = $Config["smtp_name"];
 
-        $this->api = $Config["Email"]["use_api"];
-        $this->mailgunToken = $Config["Email"]["mailgun_token"];
-        $this->mailgunDomain = $Config["Email"]["mailgun_domain"];
+        $this->api = $Config["use_api"];
+        $this->mailgunToken = $Config["mailgun_token"];
+        $this->mailgunDomain = $Config["mailgun_domain"];
     }
 
-    public function setBody($args,$file){
-        $GetTemplate = file_get_contents(BASE_PATH."Views/Emails/{$file}.tpl");
-        if (is_array($args) && count($args) > 0) {
-            $GetArgs = array_keys($args);
-            foreach ($GetArgs as $k=>$arg){
-                $GetArgs[$k] = "{".$arg."}";
+    public function setBody($file, $args = [], $isFile = false){
+        if ($isFile) {
+            $GetTemplate = file_get_contents(BASE_PATH . "Views/Emails/{$file}.tpl");
+            if (is_array($args) && count($args) > 0) {
+                $GetArgs = array_keys($args);
+                foreach ($GetArgs as $k => $arg) {
+                    $GetArgs[$k] = "{" . $arg . "}";
+                }
+                $GetVals = array_values($args);
+                $GetTemplate = str_replace($GetArgs, $GetVals, $GetTemplate);
             }
-            $GetVals = array_values($args);
-            $GetTemplate = str_replace($GetArgs, $GetVals, $GetTemplate);
+            $this->BodyEmail = $GetTemplate;
+        }else{
+            $this->BodyEmail = $file;
+            if (is_array($args) && count($args) > 0) {
+                $GetArgs = array_keys($args);
+                foreach ($GetArgs as $k => $arg) {
+                    $GetArgs[$k] = "{" . $arg . "}";
+                }
+                $GetVals = array_values($args);
+                $this->BodyEmail = str_replace($GetArgs, $GetVals, $this->BodyEmail);
+            }
         }
-        $this->BodyEmail = $GetTemplate;
     }
 
     public function setFrom($email,$nome){

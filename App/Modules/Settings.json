@@ -1,0 +1,10 @@
+[
+  {
+    "key": "Exemplo",
+    "name": "Exemplo",
+    "description": "Exemplo de modulo",
+    "author": "CodeInsight <development@codeinsight.com.br>",
+    "active": true,
+    "version": "1.0"
+  }
+]

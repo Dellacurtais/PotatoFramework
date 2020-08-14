@@ -1,21 +1,23 @@
 <?php
 $Config = array();
 
-$Config['name_project'] = "API SigPolítico";
+$Config['name_project'] = "Potato";
 
-$Config['base_dir'] = "/potato/";
-$Config['base_url'] = "http://127.0.0.1/potato/";
+$Config['base_dir'] = "/";
+$Config['base_url'] = "http://potato.com.br/";
+$Config['https_enable'] = false;
+$Config['ssl_verify'] = false; //redir ssl
 
 /**
  * Load Files Route
  * Put the name of file on folder App/Config/Routes
  */
-$Config["files_route"] = ["Default"];
+$Config["files_route"] = [ "Default" ];
 
 /**
  * Configs Rotas
  */
-$Config['default_route'] = "Welcome";
+$Config['default_route'] = "Home";
 
 /**
  *
@@ -30,18 +32,13 @@ $Config['encrypt_key'] = "default";
  * DATABASE CONFIG
  */
 $Config['db_driver'] = [
-    "isActive" => false,
-    "class" => \System\Database\MaikDriver::class, //Class Driver para setup de conexão com banco de dados
+    "isActive" => true,
+    "class" => \System\Database\EloquentDriver::class, //Class Driver para setup de conexão com banco de dados
     "config" => [
         "db_hostname" => "localhost",
-        "db_database" => "Potato",
-        "db_username" => "root",
-        "db_password" => "mysql",
-        "db_generate" => false, //Gerar Modelos
-        "db_generate_base_only" => false, //Atualizar apenas arquivo base do modelo
-        "db_generate_replace" => false, //Não substituir se existir
-        "db_generate_dir" => "", //Pasta para Gerar (Por Padão gera na pasta Model)
-        "db_keyname" => "frame_work"//Nome da conexão
+        "db_database" => "dbname",
+        "db_username" => "dbuser",
+        "db_password" => "dbpass",
     ]
 ];
 
@@ -57,6 +54,13 @@ $Config['session_id'] = "sphap"; //Nome da Sessão
 $Config['base_dir_assets'] = "public/";
 
 /**
+ * Diretorios de Uploads
+ */
+$Config['upload']['image'] = "/public/uploads/img/";
+$Config['upload']['docs'] = "/public/uploads/docs/";
+$Config['cache_image'] = "/public/cache/img/";
+
+/**
  * Default Lang
  */
 $Config['lang'] = "pt-br";
@@ -67,7 +71,7 @@ $Config['lang'] = "pt-br";
  * TEMPLATE_WITHOUT_ENGINE Use direct PHP file
  *
  */
-$Config['template'] = TEMPLATE_WITHOUT_ENGINE;
+$Config['template'] = TEMPLATE_ENGINE_SMARTY;
 
 /**
  * Timezone
@@ -79,13 +83,7 @@ $Config['timezone'] = "America/Sao_Paulo";
  * Verifica se existe o arquivo e o inclui antes de iniciar o controlador
  * Ex: Session, Pagination, Text, Upload
  */
-$Config['helpersLoad'] = ["Session"];
-
-/**
- * Diretorios de Uploads
- */
-$Config['upload']['image'] = "/public/uploads/img/";
-$Config['cache_image'] = "/public/cache/img/";
+$Config['helpersLoad'] = ["Session", "Pagination", "Text", "Upload"];
 
 /**
  * Configurações extras
@@ -109,4 +107,3 @@ $Config['Email']["smtp_name"] = "";
 $Config['Email']["use_api"] = false; //Habilitar envio true or false
 $Config['Email']["mailgun_domain"] = ""; // Domínio mailgun
 $Config['Email']["mailgun_token"] = ""; //Token mailgun
-$Config['ssl_verify'] = false;

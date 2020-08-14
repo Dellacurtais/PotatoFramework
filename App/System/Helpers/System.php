@@ -41,8 +41,7 @@ if (!function_exists("_uri_string")) {
      * @return string
      */
     function _uri_string($uri){
-        global $Config;
-        if ($Config['enable_query_strings'] === FALSE) {
+        if (getConfig("enable_query_strings") === FALSE) {
             is_array($uri) && $uri = implode('/', $uri);
             return ltrim($uri, '/');
         } elseif (is_array($uri)) {
@@ -102,8 +101,7 @@ if (!function_exists("assets")) {
      * @return string retorna url completa do arquivo
      */
     function assets($file){
-        global $Config;
-        return base_url($Config['base_dir_assets'].$file);
+        return base_url(getConfig("base_dir_assets").$file);
     }
 }
 
@@ -113,7 +111,7 @@ if (!function_exists("slash_item")) {
      * @return null|string
      */
     function slash_item($item){
-        global $Config;
+        $Config = getConfig();
         if (!isset($Config[$item])){
             return NULL;
         }elseif (trim($Config[$item]) === ''){
@@ -149,6 +147,9 @@ if (!function_exists("dateToTime")) {
      * @return bool|int
      */
     function dateToTime($date, $format = "YYYY-MM-DD"){
+        if (strlen($date) != strlen($format))
+            return 0;
+
         switch ($format) {
             case 'YYYY/MM/DD':
             case 'YYYY-MM-DD':
@@ -214,6 +215,19 @@ if (!function_exists('getConfig')){
         return $Config[$key];
     }
 }
+
+if (!function_exists('setConfig')){
+    /**
+     * Definir valor de Config especifica
+     * @param $key
+     * @return mixed
+     */
+    function setConfig($key, $value){
+        global $Config;
+        $Config[$key] = $value;
+    }
+}
+
 
 if (!function_exists('apiSuccessCall')) {
     /**
@@ -295,7 +309,9 @@ if (!function_exists('loadFilesRoute')) {
     function loadFilesRoute(){
         $Routes = getConfig("files_route");
         foreach ($Routes as $file){
-            if (file_exists(BASE_PATH."Configs/Routes/{$file}.php")) {
+            if (file_exists($file)){
+                include_once($file);
+            }else if (file_exists(BASE_PATH."Configs/Routes/{$file}.php")) {
                 include_once(BASE_PATH . "Configs/Routes/{$file}.php");
             }
         }

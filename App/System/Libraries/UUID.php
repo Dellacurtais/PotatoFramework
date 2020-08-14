@@ -9,6 +9,11 @@ namespace System\Libraries;
 
 class UUID {
 
+    /**
+     * @param $namespace
+     * @param $name
+     * @return bool|string
+     */
     public static function v3($namespace, $name) {
         if(!self::is_valid($namespace)) return false;
         $nhex = str_replace(array('-','{','}'), '', $namespace);
@@ -28,6 +33,9 @@ class UUID {
         );
     }
 
+    /**
+     * @return string
+     */
     public static function v4() {
         return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
             mt_rand(0, 0xffff), mt_rand(0, 0xffff),
@@ -38,6 +46,11 @@ class UUID {
         );
     }
 
+    /**
+     * @param $namespace
+     * @param $name
+     * @return bool|string
+     */
     public static function v5($namespace, $name) {
         if(!self::is_valid($namespace)) return false;
         $nhex = str_replace(array('-','{','}'), '', $namespace);
@@ -57,6 +70,10 @@ class UUID {
         );
     }
 
+    /**
+     * @param $uuid
+     * @return bool
+     */
     public static function is_valid($uuid) {
         return preg_match('/^\{?[0-9a-f]{8}\-?[0-9a-f]{4}\-?[0-9a-f]{4}\-?'.
             '[0-9a-f]{4}\-?[0-9a-f]{12}\}?$/i', $uuid) === 1;

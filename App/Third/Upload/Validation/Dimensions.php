@@ -35,7 +35,7 @@ class Dimensions implements ValidationInterface
         $dimensions = $info->getDimensions();
         $filename = $info->getNameWithExtension();
         if (!$dimensions) {
-            throw new Exception(sprintf('%s: Could not detect image size.', $filename));
+            throw new Exception(sprintf('%s: Não foi detect a extensão do arquivo.', $filename));
         }
         if ($dimensions['width'] != $this->width) {
             throw new Exception(

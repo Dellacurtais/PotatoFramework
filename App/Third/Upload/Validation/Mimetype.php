@@ -69,7 +69,7 @@ class Mimetype implements \Upload\ValidationInterface
     public function validate(\Upload\FileInfoInterface $fileInfo)
     {
         if (in_array($fileInfo->getMimetype(), $this->mimetypes) === false) {
-            throw new \Upload\Exception(sprintf('Invalid mimetype. Must be one of: %s', implode(', ', $this->mimetypes)), $fileInfo);
+            throw new \Upload\Exception(sprintf('Arquivo inválido. Extensões permitidas: %s', implode(', ', $this->mimetypes)), $fileInfo);
         }
     }
 }

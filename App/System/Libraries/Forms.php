@@ -87,9 +87,6 @@ class Forms {
             case Request::GET:
                 $Method = "get";
                 break;
-            case Request::POST:
-                $Method = "post";
-                break;
             case Request::REQUEST:
                 $Method = "request";
                 break;
@@ -99,6 +96,7 @@ class Forms {
             case Request::EXTRA:
                 $Method = "extra";
                 break;
+            case Request::POST:
             default:
                 $Method = "post";
                 break;
@@ -118,8 +116,17 @@ class Forms {
             try {
                 $isRequire = $args[0];
                 if ($isRequire && (empty($Value) || is_null($Value))){
-                    $this->errors[$input] = Lang::get("form_require",":attr:", Lang::get("input_{$input}"));
+                    if (!is_null($args[3])){
+                        $msgError = $args[3];
+                    }else{
+                        $msgError = Lang::get("form_require",":attr:", Lang::get("input_{$input}"));
+                    }
+                    $this->errors[$input] = $msgError;
                 }else{
+                    if (!$isRequire && (empty($Value) || is_null($Value))){
+                        continue;
+                    }
+
                     if (is_array($args[1])){
                         $Class = $args[1][0];
                         $ValidMethod = $args[1][1];

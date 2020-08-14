@@ -3,8 +3,6 @@ namespace System\Libraries;
 
 use System\FastApp;
 
-require_once( BASE_PATH_THIRD.'Smarty/Smarty.class.php' );
-
 class Smarty extends \Smarty {
 
     protected static $instance;
@@ -32,6 +30,10 @@ class Smarty extends \Smarty {
             $this->loadFilter('output', 'trimwhitespace');
         } catch (\SmartyException $ignore) {
         }
+    }
+
+    public function setDefaultTemplate(){
+       $this->setTemplateDir(BASE_PATH . "Views/");
     }
 
     /**

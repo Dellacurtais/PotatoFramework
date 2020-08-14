@@ -28,13 +28,14 @@ class Session {
      * @param $key string
      * @param $message string|mixed
      */
-    public function setFlash($key,$message){
+    public function setFlash($key, $message){
         $Flash = $this->get("flash_data");
 
         if (isset($Flash[$key]))
             unset($Flash[$key]);
 
-        $data = array_merge(array($key => $message), is_array($Flash) ? $Flash : array() );
+        $data = array_merge( is_array($Flash) ? $Flash : [] , [ $key => $message ] );
+
         $this->set("flash_data",$data);
     }
 

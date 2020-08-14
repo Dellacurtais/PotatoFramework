@@ -4,6 +4,7 @@ namespace System;
 use System\Core\DefaultErrors;
 use System\Core\HooksRoutes;
 use System\Core\Routes;
+use System\Libraries\Hooks;
 use System\Libraries\Lang;
 
 class FastApp {
@@ -37,11 +38,19 @@ class FastApp {
         self::$instance = $this;
 
         $this->loadHelper("System");
-        $this->Config = getConfig();
+
+        if (getConfig('https_enable')){
+            $this->sslRedirect();
+        }
 
         if ($onlyLoad) return;
 
         Lang::getInstance()->load("System");
+
+        //Executar eventos
+        Hooks::executeCallBefore();
+
+        //Obter Rotas
         loadFilesRoute();
 
         //Load Helpers
@@ -64,8 +73,8 @@ class FastApp {
         $RequestMethod = $_SERVER['REQUEST_METHOD'];
 
         $this->rePatch($this->RequestURI);
-        if (empty($this->Patch[0]) && !empty($this->Config['default_route'])) {
-            $this->RequestURI = $this->Config['default_route'];
+        if (empty($this->Patch[0]) && !empty(getConfig("default_route"))) {
+            $this->RequestURI = getConfig("default_route");
             $this->rePatch($this->RequestURI);
         }
 
@@ -89,6 +98,9 @@ class FastApp {
 
             goto OnNotFound;
         }
+
+        //Executar eventos
+        Hooks::executeCallAfter();
 
         OnNotFound:{
             HooksRoutes::getInstance()->onNotFound();
@@ -121,7 +133,7 @@ class FastApp {
      * @return mixed Retorna valor de configuração do indice definido
      */
     public function getConfig($key){
-        return $this->Config[$key];
+        return getConfig($key);
     }
 
     /**
@@ -169,17 +181,18 @@ class FastApp {
      * Inicia as configurações de banco de dados
      */
     private function initDatabase(){
-        if ($this->Config['db_driver']["isActive"] && (
-                !is_null($this->Config["db_driver"]['class']) ||
-                !empty($this->Config["db_driver"]['class'])
+        $Config = getConfig("db_driver");
+        if ($Config["isActive"] && (
+                !is_null($Config['class']) ||
+                !empty($Config['class'])
             )){
-            if (class_exists($this->Config["db_driver"]['class'])){
-                $DriverClass = $this->Config["db_driver"]['class'];
+            if (class_exists($Config['class'])){
+                $DriverClass = $Config['class'];
                 /**
                  * @var $Driver \System\Database\DriverImplements
                  */
                 $Driver = new $DriverClass();
-                $Driver->createConnection($this->Config["db_driver"]["config"]);
+                $Driver->createConnection($Config["config"]);
             }
         }
     }
@@ -191,4 +204,15 @@ class FastApp {
         execute_callbacks($this->Route, 'onCallFinish');
     }
 
+    /**
+     * Redirecionamento HTTPS
+     */
+    private function sslRedirect(){
+        if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
+            $location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+            header('HTTP/1.1 301 Moved Permanently');
+            header('Location: ' . $location);
+            exit;
+        }
+    }
 }

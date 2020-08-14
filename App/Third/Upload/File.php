@@ -49,9 +49,9 @@ class File implements \ArrayAccess, \IteratorAggregate, \Countable
      * @var array
      */
     protected static $errorCodeMessages = array(
-        1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
-        2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
-        3 => 'The uploaded file was only partially uploaded',
+        1 => 'O tamanho do arquivo excede tamanho permitido',
+        2 => 'O tamanho do arquivo excede tamanho permitido',
+        3 => 'Erro ao fazer upload',
         4 => 'No file was uploaded',
         6 => 'Missing a temporary folder',
         7 => 'Failed to write file to disk',

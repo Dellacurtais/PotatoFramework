@@ -85,11 +85,11 @@ class Size implements \Upload\ValidationInterface
         $fileSize = $fileInfo->getSize();
 
         if ($fileSize < $this->minSize) {
-            throw new \Upload\Exception(sprintf('File size is too small. Must be greater than or equal to: %s', $this->minSize), $fileInfo);
+            throw new \Upload\Exception('O Arquivo é muito pequeno', $fileInfo);
         }
 
         if ($fileSize > $this->maxSize) {
-            throw new \Upload\Exception(sprintf('File size is too large. Must be less than: %s', $this->maxSize), $fileInfo);
+            throw new \Upload\Exception('O Arquivo é muito grande', $fileInfo);
         }
     }
 }

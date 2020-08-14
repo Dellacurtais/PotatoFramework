@@ -7,6 +7,7 @@ if (!function_exists('makePagination')) {
      * @param string $defaultParameter String nome do parametro GET da paginção, Default: p
      */
     function makePagination($pager, $baseUrl, $defaultParameter = "p"){
+
         ?>
         <ul class="pagination">
             <?php if ($pager['preview_page'] != null) { ?>
@@ -18,7 +19,7 @@ if (!function_exists('makePagination')) {
                 </li>
             <?php } ?>
             <?php for ($p = $pager['start_on']; $p <= $pager['end_on']; $p++) { ?>
-                <li class="page-item"><a href="<?= base_url("{$baseUrl}?{$defaultParameter}={$p}") . getQuery([$defaultParameter], true) ?>"
+                <li class="page-item <?php if ($p == $pager['page']) echo "active";?>"><a href="<?= base_url("{$baseUrl}?{$defaultParameter}={$p}") . getQuery([$defaultParameter], true) ?>"
                                          class="page-link"><?= $p ?></a></li>
             <?php } ?>
             <?php if ($pager['next_page'] != null) { ?>

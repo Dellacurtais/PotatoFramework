@@ -19,6 +19,42 @@ if (!function_exists('trimText')) {
     }
 }
 
+
+if(!function_exists("trimWords")){
+    /**
+     * @param $string
+     * @param int $limit
+     * @return string
+     */
+    function trimWords($string, $limit = 15){
+        $words = explode(' ', $string);
+        if (count($words) > $limit){
+            return implode(' ', array_slice($words, 0, $limit))."...";
+        }
+        return $string;
+    }
+}
+
+if (!function_exists("truncateText")){
+    /**
+     * @param $string
+     * @param $limit
+     * @param string $break
+     * @param string $pad
+     * @return string
+     */
+    function truncateText($string, $limit, $break = ".", $pad = "...") {
+        if (strlen($string) <= $limit) return $string;
+
+        if (false !== ($max = strpos($string, $break, $limit))) {
+            if ($max < strlen($string) - 1) {
+                $string = substr($string, 0, $max) . $pad;
+            }
+        }
+        return $string;
+    }
+}
+
 if (extension_loaded('mbstring')) {
     mb_internal_encoding('UTF-8');
 

@@ -18,7 +18,7 @@ if (!function_exists('getFlashError')) {
     function getFlashError(){
         $Error = \System\Libraries\Session::getInstance()->getFlash("error");
         if ($Error) {
-            return "<div class='alert alert-danger'>{$Error}</div>";
+            return "<div class='alert alert-danger'><i class='fa fa-times-circle'></i> {$Error}</div>";
         }
         return null;
     }
@@ -42,7 +42,7 @@ if (!function_exists('getFlashSuccess')) {
     function getFlashSuccess(){
         $Success = \System\Libraries\Session::getInstance()->getFlash("success");
         if ($Success) {
-            return "<div class='alert alert-success'>{$Success}</div>";
+            return "<div class='alert alert-success'><i class='fa fa-check'></i> {$Success}</div>";
         }
         return null;
     }
@@ -66,7 +66,7 @@ if (!function_exists('getFlashWarning')) {
     function getFlashWarning(){
         $Warning = \System\Libraries\Session::getInstance()->getFlash("warning");
         if ($Warning) {
-            return "<div class='alert alert-warning'>{$Warning}</div>";
+            return "<div class='alert alert-warning'><i class='fa fa-warning'></i> {$Warning}</div>";
         }
         return null;
     }

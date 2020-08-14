@@ -76,7 +76,7 @@ class Extension implements \Upload\ValidationInterface
         $fileExtension = strtolower($fileInfo->getExtension());
 
         if (in_array($fileExtension, $this->allowedExtensions) === false) {
-            throw new \Upload\Exception(sprintf('Invalid file extension. Must be one of: %s', implode(', ', $this->allowedExtensions)), $fileInfo);
+            throw new \Upload\Exception(sprintf('Extensão inválida. Deve ser umas das seguintes: %s', implode(', ', $this->allowedExtensions)), $fileInfo);
         }
     }
 }

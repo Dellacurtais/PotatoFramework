@@ -27,6 +27,7 @@ class DefaultErrors {
         }
 
         if ($Config["template"] == TEMPLATE_ENGINE_SMARTY) {
+            Smarty::getInstance()->setDefaultTemplate();
             Smarty::getInstance()->view("Error/ErrorHandler.tpl", [
                 "number" => $errno,
                 "error" => $errstr,
@@ -54,6 +55,7 @@ class DefaultErrors {
         }
 
         if ($Config["template"] == TEMPLATE_ENGINE_SMARTY) {
+            Smarty::getInstance()->setDefaultTemplate();
             Smarty::getInstance()->view("Error/Error404.tpl");
         }else{
             getViewPhp("Error/Error404.php");
@@ -75,6 +77,7 @@ class DefaultErrors {
             exit();
         }
         if ($Config["template"] == TEMPLATE_ENGINE_SMARTY) {
+            Smarty::getInstance()->setDefaultTemplate();
             Smarty::getInstance()->view("Error/ErrorXXX.tpl", ["Excpetion" => $Exception]);
         }else{
             getViewPhp("Error/ErrorXXX.php", ["Excpetion" => $Exception]);

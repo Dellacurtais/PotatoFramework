@@ -1,6 +1,7 @@
 <?php
 namespace Controller;
 
+use Models\Bolsas;
 use System\Core\Controller;
 
 class Index extends Controller {
@@ -10,15 +11,8 @@ class Index extends Controller {
     }
 
     public function Index(){
-        if (getConfig("template") === TEMPLATE_WITHOUT_ENGINE) {
-            $this->setView("Layout/Content", [
-                "layout" => "welcome.php"
-            ]);
-        }else{
-            $this->setView("Layout/Content", [
-                "layout" => "welcome.tpl"
-            ]);
-        }
+
+        $this->setView( "Layout/Content" , [ "layout" => "welcome.tpl" ]);
     }
 
 }

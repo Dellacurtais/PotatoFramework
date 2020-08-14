@@ -1,6 +1,8 @@
 <?php
 namespace System;
 
+use System\ResponseType as ResponseType;
+
 class Response {
 
     protected static $instance = null;
@@ -68,5 +70,71 @@ class Response {
      */
     public function encodeJson($msg, $data = null, $response = false){
         return json_encode(["msg" => $msg, "data" => $data, "responseError" => $response]);
+    }
+
+    /**
+     * Get Default HTML
+     * @param array $Merge Extra Headers
+     * @return array
+     */
+    public static function getDefaultHtml($Merge = []){
+        return array_merge($Merge, [
+            "Content-Type:".ResponseType::CONTENT_HTML,
+        ]);
+    }
+
+    /**
+     * Get Default JSON
+     * @param array $Merge Extra Headers
+     * @return array
+     */
+    public static function getDefaultJson($Merge = []){
+        return array_merge($Merge, [
+            "Content-Type:".ResponseType::CONTENT_JSON,
+        ]);
+    }
+
+    /**
+     * Get Default JS
+     * @param array $Merge Extra Headers
+     * @return array
+     */
+    public static function getDefaultJs($Merge = []){
+        return array_merge($Merge, [
+            "Content-Type:".ResponseType::CONTENT_JS,
+        ]);
+    }
+
+    /**
+     * Get Default CSS
+     * @param array $Merge Extra Headers
+     * @return array
+     */
+    public static function getDefaultCss($Merge = []){
+        return array_merge($Merge, [
+            "Content-Type:".ResponseType::CONTENT_CSS,
+        ]);
+    }
+
+    /**
+     * Get Default XML
+     * @param array $Merge Extra Headers
+     * @return array
+     */
+    public static function getDefaultXml($Merge = []){
+        return array_merge($Merge, [
+            "Content-Type:".ResponseType::CONTENT_XML,
+        ]);
+    }
+
+    /**
+     * Get Default OctetStream
+     * @param array $Merge Extra Headers
+     * @return array
+     */
+    public static function getDefaultOctetStream($Merge = []){
+        return array_merge($Merge, [
+            "Content-Type:".ResponseType::CONTENT_OCTETSTREAM,
+        ]);
     }
 }

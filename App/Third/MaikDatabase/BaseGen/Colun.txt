@@ -1,5 +1,0 @@
-        $this->addColum("%COLUN%",[
-            "primary" => %PRIMARY%,
-            "auto_increment" => %AUTO%,
-            "default" => %DEFAULT%
-        ]);
