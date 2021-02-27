@@ -121,13 +121,13 @@ if (!function_exists("slash_item")) {
     }
 }
 
-if (!function_exists("ramdomCode")) {
+if (!function_exists("randomCode")) {
     /**
      * Gerar string aléatoria
      * @param int $tamanho tamanho da string que deseja gerar
      * @return string
      */
-    function ramdomCode($tamanho = 8) {
+    function randomCode($tamanho = 8) {
         $retorno = '';
         $caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
         $len = strlen($caracteres);
@@ -228,7 +228,6 @@ if (!function_exists('setConfig')){
     }
 }
 
-
 if (!function_exists('apiSuccessCall')) {
     /**
      * Retorna um JSON de sucesso
@@ -283,7 +282,6 @@ if (!function_exists('execute_callbacks')){
     }
 }
 
-
 if (!function_exists('execute_class')){
     function execute_class($class, $method){
         if (class_exists($class)) {
@@ -315,5 +313,17 @@ if (!function_exists('loadFilesRoute')) {
                 include_once(BASE_PATH . "Configs/Routes/{$file}.php");
             }
         }
+    }
+}
+
+if (!function_exists('addShortcode')){
+    function addShortcode($name, $function){
+        System\Libraries\Shortcode::getInstance()->addHandlers($name, $function);
+    }
+}
+
+if (!function_exists('renderShortcode')){
+    function renderShortcode($text){
+        return System\Libraries\Shortcode::getInstance()->getProcessor($text);
     }
 }

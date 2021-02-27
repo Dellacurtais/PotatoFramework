@@ -54,12 +54,12 @@ class Validate {
      */
     private function _varchar($str, $args){
         if (isset($args['min']) && is_numeric($args['min'])){
-            if (!isset($str{$args['min']-1})){
+            if (!isset($str[$args['min']-1])){
                 return false;
             }
         }
         if (isset($args['max']) && is_numeric($args['max'])){
-            if (isset($str{$args['max']})){
+            if (isset($str[$args['max']])){
                 return false;
             }
         }
@@ -121,12 +121,12 @@ class Validate {
      */
     private function _onlyAlpha($str, $args){
         if (isset($args['min']) && is_numeric($args['min'])){
-            if (!isset($str{$args['min']-1})){
+            if (!isset($str[$args['min']-1])){
                 return false;
             }
         }
         if (isset($args['max']) && is_numeric($args['max'])){
-            if (isset($str{$args['max']})){
+            if (isset($str[$args['max']])){
                 return false;
             }
         }
@@ -144,12 +144,12 @@ class Validate {
      */
     private function _onlyAlphanumeric($str, $args){
         if (isset($args['min']) && is_numeric($args['min'])){
-            if (!isset($str{$args['min']-1})){
+            if (!isset($str[$args['min']-1])){
                 return false;
             }
         }
         if (isset($args['max']) && is_numeric($args['max'])){
-            if (isset($str{$args['max']})){
+            if (isset($str[$args['max']])){
                 return false;
             }
         }

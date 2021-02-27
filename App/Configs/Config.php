@@ -1,11 +1,11 @@
 <?php
 $Config = array();
 
-$Config['name_project'] = "Potato";
+$Config['name_project'] = "CodeInsight";
 
 $Config['base_dir'] = "/";
-$Config['base_url'] = "http://potato.com.br/";
-$Config['https_enable'] = false;
+$Config['base_url'] = "https://potato.codeinsight.com.br/";
+$Config['https_enable'] = true;
 $Config['ssl_verify'] = false; //redir ssl
 
 /**
@@ -32,13 +32,13 @@ $Config['encrypt_key'] = "default";
  * DATABASE CONFIG
  */
 $Config['db_driver'] = [
-    "isActive" => true,
+    "isActive" => false,
     "class" => \System\Database\EloquentDriver::class, //Class Driver para setup de conexão com banco de dados
     "config" => [
         "db_hostname" => "localhost",
-        "db_database" => "dbname",
-        "db_username" => "dbuser",
-        "db_password" => "dbpass",
+        "db_database" => "",
+        "db_username" => "",
+        "db_password" => "",
     ]
 ];
 
@@ -83,14 +83,7 @@ $Config['timezone'] = "America/Sao_Paulo";
  * Verifica se existe o arquivo e o inclui antes de iniciar o controlador
  * Ex: Session, Pagination, Text, Upload
  */
-$Config['helpersLoad'] = ["Session", "Pagination", "Text", "Upload"];
-
-/**
- * Configurações extras
- */
-$Config['auth_link'] = "";
-$Config['auth_user'] = "";
-$Config['auth_pass'] = "";
+$Config['helpersLoad'] = ["Session", "Text", "Upload"];
 
 /**
  * Emails
@@ -101,9 +94,3 @@ $Config['Email']["smtp_pass"] = "";
 $Config['Email']["smtp_port"] = "";
 $Config['Email']["smtp_name"] = "";
 
-/**
- * Usar MailGun para envio de Emails
- */
-$Config['Email']["use_api"] = false; //Habilitar envio true or false
-$Config['Email']["mailgun_domain"] = ""; // Domínio mailgun
-$Config['Email']["mailgun_token"] = ""; //Token mailgun

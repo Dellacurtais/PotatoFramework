@@ -7,7 +7,3 @@ RewriteRule ^(.+) - [PT,L]
 
 RewriteRule ^(.*)$ index\.php [QSA,L]
 
-#AuthType Basic
-#AuthName "Dados de acesso"
-#AuthUserFile .htpasswd
-#Require valid-user

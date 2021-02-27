@@ -196,4 +196,9 @@ class Routes {
         }
         self::$Routes[$method][$route] = $configs;
     }
+
+    public static function clearRoutes(){
+        self::$DynamicRoutes = [];
+        self::$Routes = [];
+    }
 }

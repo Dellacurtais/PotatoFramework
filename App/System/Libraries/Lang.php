@@ -6,8 +6,11 @@ use System\FastApp;
 class Lang {
     private static $instance = null;
 
-    protected $language = array();
-    protected $is_loaded = array();
+    protected $language = [];
+    protected $is_loaded = [];
+
+    protected $dir_lang = [];
+    protected $set_dir = null;
 
     public function __construct() {
         self::$instance = $this;
@@ -18,6 +21,14 @@ class Lang {
             self::$instance = new Lang();
         }
         return self::$instance;
+    }
+
+    public function addDir($name, $dir){
+        $this->dir_lang[$name] = $dir;
+    }
+
+    public function setDir($name){
+        $this->set_dir = isset($this->dir_lang[$name]) ? $this->dir_lang[$name] : null;
     }
 
     /**
@@ -56,7 +67,12 @@ class Lang {
             $alt_path .= 'Lang/' . $idiom . '/' . $langfile;
             if (file_exists($alt_path)) {
                 include($alt_path);
-                $found = true;
+            }
+        }
+        if (!is_null($this->set_dir)){
+            $basepath = $this->set_dir . $idiom . '/' . $langfile;
+            if (($found = file_exists($basepath)) === true) {
+                include($basepath);
             }
         }
 

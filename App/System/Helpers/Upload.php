@@ -6,18 +6,19 @@ if (!function_exists("uploadImage")) {
      * @param $input String nome do input do arquivo
      * @param string $size tamanho maxímo do Arquivo.. Ex: 5M, 10G ...
      * @param array $pixels enviar array com width e height permitdo Ex: [199,100]
-     * @return String retorna nome do arquivo
+     * @param array $mimes enviar array com os mimetype Ex: ['image/png', 'image/gif']
+     * @return String|array retorna nome do arquivo ou array com erros
      */
-    function uploadImage($input, $size = "5M", $pixels = null){
+    function uploadImage($input, $size = "5M", $pixels = null, $mimes = ['image/png', 'image/gif', 'image/jpeg', 'image/jpg']){
 
         $Config = getConfig("upload");
         $storage = new \Upload\Storage\FileSystem(ROOT_PATH . $Config['image']);
         $file = new \Upload\File($input, $storage);
-        $file->setName(\System\Libraries\UUID::v4() . "-" . ramdomCode(6));
+        $file->setName(\System\Libraries\UUID::v4() . "-" . ramdonCode(6));
 
 
         $Validations = [];
-        $Validations[] = new \Upload\Validation\Mimetype(array('image/png', 'image/gif', 'image/jpeg', 'image/jpg'));
+        $Validations[] = new \Upload\Validation\Mimetype($mimes);
         $Validations[] = new \Upload\Validation\Size($size);
         if (!is_null($pixels) && is_array($pixels))
             $Validations[] = new \Upload\Validation\Dimensions($pixels[0], $pixels[1]);

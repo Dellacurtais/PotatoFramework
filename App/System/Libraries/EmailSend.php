@@ -10,10 +10,6 @@ class EmailSend {
     protected $copyEmail = array();
     protected $from = array();
     protected $subject = "";
-    protected $api;
-
-    protected $mailgunDomain;
-    protected $mailgunToken;
 
     public function __construct(){
         if (is_null(self::$_instance)) {
@@ -42,10 +38,6 @@ class EmailSend {
         );
         $this->from['email'] = $Config["smtp_user"];
         $this->from['nome'] = $Config["smtp_name"];
-
-        $this->api = $Config["use_api"];
-        $this->mailgunToken = $Config["mailgun_token"];
-        $this->mailgunDomain = $Config["mailgun_domain"];
     }
 
     public function setBody($file, $args = [], $isFile = false){
@@ -103,36 +95,17 @@ class EmailSend {
     }
 
     public function sendMail(){
-        if ($this->api){
-            return $this->sendMailGun();
-        }else {
-            $Email = new Email($this->config);
-            $Email->from($this->from['email'], $this->from['nome']);
-            foreach ($this->email as $email) {
-                $Email->to($email);
-            }
-            foreach ($this->copyEmail as $d => $mail) {
-                $Email->cc($mail);
-            }
-            $Email->subject($this->subject);
-            $Email->message($this->BodyEmail);
-            return $Email->send();
-        }
-    }
-
-    protected function sendMailGun(){
-        $mailgun = new \Mailgun\MailgunApi($this->mailgunDomain, $this->mailgunToken);
-        $message = $mailgun->newMessage();
-        $message->setFrom($this->from['email'], $this->from['nome']);
+        $Email = new Email($this->config);
+        $Email->from($this->from['email'], $this->from['nome']);
         foreach ($this->email as $email) {
-            $message->addTo($email, "");
+            $Email->to($email);
         }
-        foreach ($this->copyEmail as $copyEmail) {
-            $message->addCc($copyEmail, "");
+        foreach ($this->copyEmail as $d => $mail) {
+            $Email->cc($mail);
         }
-        $message->setSubject($this->subject);
-        $message->setHtml($this->BodyEmail);
-        return $message->send();
+        $Email->subject($this->subject);
+        $Email->message($this->BodyEmail);
+        return $Email->send();
     }
 
 }

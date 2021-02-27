@@ -50,7 +50,7 @@ class Forms {
      * @return string token form
      */
     public function initJson($NameForm){
-        $CodeForm = ramdomCode(8);
+        $CodeForm = randomCode(8);
         Session::getInstance()->setFlash($NameForm, $CodeForm);
         return $CodeForm;
     }
@@ -66,7 +66,7 @@ class Forms {
             $attrs .= "{$key}=\"{$item}\" ";
         }
 
-        $CodeForm = ramdomCode(8);
+        $CodeForm = randomCode(8);
         Session::getInstance()->setFlash($NameForm, $CodeForm);
         return "<form {$attrs}><input type='hidden' name='{$NameForm}' value='$CodeForm'>";
     }

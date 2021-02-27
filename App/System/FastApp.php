@@ -6,6 +6,7 @@ use System\Core\HooksRoutes;
 use System\Core\Routes;
 use System\Libraries\Hooks;
 use System\Libraries\Lang;
+use System\Libraries\ModuleManager;
 
 class FastApp {
     protected static $instance;
@@ -16,6 +17,11 @@ class FastApp {
 
     protected $RequestURI;
     protected $Route;
+
+    /**
+     * @var array params to controller
+     */
+    protected $Params;
 
     /**
      * Obter instancia do framework
@@ -47,6 +53,9 @@ class FastApp {
 
         Lang::getInstance()->load("System");
 
+        $Modulo = new ModuleManager();
+        $Modulo->setup();
+
         //Executar eventos
         Hooks::executeCallBefore();
 
@@ -72,6 +81,7 @@ class FastApp {
         $this->RequestURI = getUriPatch();
         $RequestMethod = $_SERVER['REQUEST_METHOD'];
 
+
         $this->rePatch($this->RequestURI);
         if (empty($this->Patch[0]) && !empty(getConfig("default_route"))) {
             $this->RequestURI = getConfig("default_route");
@@ -88,9 +98,9 @@ class FastApp {
         }else{
             $this->Route = Routes::getRoute($this->RequestURI, $RequestMethod);
             Routes::validateRoute($this->Route);
+            Routes::clearRoutes();
 
             execute_callbacks($this->Route, 'onCallBefore');
-
             if (execute_class($this->Route['Controller'], $this->Route['Method'])) {
                 execute_callbacks($this->Route, 'onCallAfter');
                 return;
@@ -214,5 +224,24 @@ class FastApp {
             header('Location: ' . $location);
             exit;
         }
+    }
+
+    /**
+     * @param $key
+     * @param $value
+     */
+    public function addParams($key, $value){
+        $this->Params[$key] = $value;
+    }
+
+    /**
+     * @param $key
+     * @return mixed|null
+     */
+    public function getParam($key){
+        if (isset($this->Params[$key])){
+            return $this->Params[$key];
+        }
+        return null;
     }
 }

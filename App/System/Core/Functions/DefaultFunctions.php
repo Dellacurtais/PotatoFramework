@@ -29,17 +29,18 @@ if (!function_exists('shutdownHandler')) {
      */
     function shutdownHandler(){
         $lasterror = error_get_last();
-        switch ($lasterror['type']) {
-            case E_ERROR:
-            case E_CORE_ERROR:
-            case E_COMPILE_ERROR:
-            case E_USER_ERROR:
-            case E_RECOVERABLE_ERROR:
-            case E_CORE_WARNING:
-            case E_COMPILE_WARNING:
-            case E_PARSE:
-                handler_error($lasterror['type'], $lasterror['message'], $lasterror['file'], $lasterror['line']);
-        }
+        if (isset($lasterror['type']))
+            switch ($lasterror['type']) {
+                case E_ERROR:
+                case E_CORE_ERROR:
+                case E_COMPILE_ERROR:
+                case E_USER_ERROR:
+                case E_RECOVERABLE_ERROR:
+                case E_CORE_WARNING:
+                case E_COMPILE_WARNING:
+                case E_PARSE:
+                    handler_error($lasterror['type'], $lasterror['message'], $lasterror['file'], $lasterror['line']);
+            }
     }
 }
 

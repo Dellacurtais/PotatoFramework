@@ -10,13 +10,13 @@
     }
   ],
   "require": {
-    "smarty/smarty": "v3.1.33",
     "ext-json": "*",
     "ext-pdo": "*",
-    "rbdwllr/reallysimplejwt": "1.1.0",
-    "delight-im/cookie": "v3.1.2",
-    "mpdf/mpdf": "7.0.2",
+    "smarty/smarty": "~3.1",
+    "delight-im/cookie": "~3.1",
     "php-unit-conversion/php-unit-conversion": "1.2.1",
-    "illuminate/database": "5.7.19"
+    "illuminate/database": "^8",
+    "thunderer/shortcode": "^0.7",
+    "illuminate/pagination": "^8"
   }
 }
