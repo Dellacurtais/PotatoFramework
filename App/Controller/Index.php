@@ -1,7 +1,6 @@
 <?php
 namespace Controller;
 
-use Models\Bolsas;
 use System\Core\Controller;
 
 class Index extends Controller {
