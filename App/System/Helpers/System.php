@@ -1,4 +1,5 @@
 <?php
+
 if (!function_exists('redirect')){
     /**
      * Redirecionamento de página
@@ -283,12 +284,39 @@ if (!function_exists('execute_callbacks')){
 }
 
 if (!function_exists('execute_class')){
-    function execute_class($class, $method){
+    function execute_class($class, $method, $attrs = []){
         if (class_exists($class)) {
-            $initClass = new $class();
-            if (method_exists($initClass, $method)) {
-                $initClass->$method();
+            try {
+                $verifyClass = new ReflectionClass($class);
+                $totalParams = $verifyClass->getMethod($method)->getParameters();
+
+                $finalAttrs = [];
+                foreach ($totalParams as $parameter) {
+                    $nameVar = $parameter->getName();
+                    if (isset($attrs[$nameVar])){
+                        $finalAttrs[] = $attrs[$nameVar];
+                    }else{
+                        switch ($nameVar){
+                            case 'request':
+                                $finalAttrs[] = \System\Request::getInstance();
+                                break;
+                            case 'response':
+                                $finalAttrs[] = \System\Response::getInstance();
+                                break;
+                        }
+                    }
+                }
+
+                $initClass = new $class();
+                $Return = call_user_func_array([$initClass, $method], $finalAttrs);
+                if ($Return instanceof \System\Libraries\View){
+                    renderView($Return);
+                }
+
                 return true;
+            } catch (ReflectionException $e) {
+
+                return false;
             }
         }
         return false;
@@ -325,5 +353,19 @@ if (!function_exists('addShortcode')){
 if (!function_exists('renderShortcode')){
     function renderShortcode($text){
         return System\Libraries\Shortcode::getInstance()->getProcessor($text);
+    }
+}
+
+if (!function_exists('renderView')){
+    function renderView(\System\Libraries\View $view){
+        if ($view->getType() == \System\Libraries\View::VIEW){
+            \System\Response::getInstance()->getController()->setView(
+                $view->getView(),
+                $view->getParams()
+            );
+        }
+        if ($view->getType() == \System\Libraries\View::JSON) {
+            echo json_encode(["status" => $view->getStatus(), "message" => $view->getMessage(), "response" => $view->getResponse()]);
+        }
     }
 }

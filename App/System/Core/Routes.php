@@ -108,9 +108,9 @@ class Routes {
      * @param $type
      * @param $base
      * @param $controllers
-     * @param $config
+     * @param array $config
      */
-    public static function group($type, $base, $controllers, $config){
+    public static function group($type, $base, $controllers, array $config = []){
         foreach ($controllers as $route => $controller){
             $configs = array_merge($config, $controller);
             if (!empty($route)) {
@@ -154,12 +154,17 @@ class Routes {
 
         foreach (self::$DynamicRoutes as $dRoute => $nRoute){
             foreach ($nRoute as $type => $args){
-                $key = str_replace([':any', ':num'], ['[^/]+', '[0-9]+'], $type);
-
+                preg_match_all("/{(.*?)}/", $type, $vars);
+                $key = str_replace($vars[0], '([^/]+)', $type);
                 if (preg_match('#^'.$key.'$#', $route, $matches)){
+                    $attrs = [];
+                    foreach ($vars[1] as $k=>$var){
+                        $attrs[$var] = $matches[$k+1];
+                    }
+                    $args['Attrs'] = $attrs;
+
                     self::$Routes[$dRoute][$matches[0]] = $args;
                     return true;
-                    break;
                 }
             }
         }
@@ -190,7 +195,8 @@ class Routes {
      * @param $configs
      */
     protected static function setRoute($method, $route, $configs){
-        if (strpos($route, "(:any)") !== false || strpos($route,"(:num)") !== false){
+        preg_match_all("/{(.*?)}/", $route, $matches);
+        if (count($matches[0]) > 0){
             self::$DynamicRoutes[$method][$route] = $configs;
             return;
         }

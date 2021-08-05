@@ -1,12 +1,14 @@
 <?php
 namespace System;
 
+use System\Libraries\View;
 use System\ResponseType as ResponseType;
 
 class Response {
 
     protected static $instance = null;
     protected $responseHeader = [];
+    protected $controller = null;
 
     const ALL = "ALL";
     const GET = "GET";
@@ -26,6 +28,20 @@ class Response {
             self::$instance = new Response();
         }
         return self::$instance;
+    }
+
+    /**
+     * @param \System\Core\Controller $controller
+     */
+    public function setController($controller){
+        $this->controller = $controller;
+    }
+
+    /**
+     * @param \System\Core\Controller $controller
+     */
+    public function getController(){
+        return $this->controller;
     }
 
     /**
@@ -62,14 +78,19 @@ class Response {
     }
 
     /**
-     * Criar json simples para requisições ajax, api, etc...
-     * @param $msg
-     * @param null $data
-     * @param bool $response
-     * @return false|string
+     * @return \System\Libraries\ViewJson
      */
-    public function encodeJson($msg, $data = null, $response = false){
-        return json_encode(["msg" => $msg, "data" => $data, "responseError" => $response]);
+    public function json(){
+        $this->setHeaderType(ResponseType::CONTENT_JSON);
+        return View::getJson();
+    }
+
+    /**
+     * @return \System\Libraries\ViewHtml
+     */
+    public function html(){
+        $this->setHeaderType(ResponseType::CONTENT_HTML);
+        return View::getHtml();
     }
 
     /**

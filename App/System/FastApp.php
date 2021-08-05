@@ -90,7 +90,7 @@ class FastApp {
 
         if (!Routes::verifyRoute($this->RequestURI, $RequestMethod)) {
             $nController = "\\Controller\\".$this->Patch[0];
-            $nMethod = isset($this->Patch[1]) ? $this->Patch[1] : "index";
+            $nMethod = $this->Patch[1] ?? "index";
 
             if (!execute_class($nController, $nMethod)) {
                 goto OnNotFound;
@@ -101,7 +101,7 @@ class FastApp {
             Routes::clearRoutes();
 
             execute_callbacks($this->Route, 'onCallBefore');
-            if (execute_class($this->Route['Controller'], $this->Route['Method'])) {
+            if (execute_class($this->Route['Controller'], $this->Route['Method'], $this->Route['Attrs'] ?? [] )) {
                 execute_callbacks($this->Route, 'onCallAfter');
                 return;
             }

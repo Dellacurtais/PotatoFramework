@@ -168,16 +168,19 @@ class Request {
             return null;
 
         if (isset($_GET[$key]))
-            return $_GET[$key];
+            return filter_var($_GET[$key], FILTER_SANITIZE_STRING);
 
         if (isset($_POST[$key]))
-            return $_POST[$key];
+            return filter_var($_POST[$key], FILTER_SANITIZE_STRING);
 
         if (isset(self::$paramJson[$key]))
             return self::$paramJson[$key];
 
         if (isset(self::$extra[$key]))
             return self::$extra[$key];
+
+        if (isset($_REQUEST[$key]))
+            return filter_var($_REQUEST[$key], FILTER_SANITIZE_STRING);
 
         return null;
     }
@@ -196,6 +199,10 @@ class Request {
             return $this->allHeaders[$key];
 
         return null;
+    }
+
+    public function __get($key){
+        return self::find($key);
     }
 
 }
