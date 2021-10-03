@@ -12,7 +12,6 @@ class Controller {
 
     private $hasEngine = null;
     private $smarty = null;
-    private $lang = null;
 
     /**
      * Construtor do controlador
@@ -23,8 +22,6 @@ class Controller {
         if ($this->hasEngine == TEMPLATE_ENGINE_SMARTY) {
             $this->smarty = Smarty::getInstance();
         }
-
-        $this->lang = Lang::getInstance();
     }
 
     /**

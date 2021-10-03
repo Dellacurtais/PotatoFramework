@@ -81,14 +81,16 @@ class FastApp {
         $this->RequestURI = getUriPatch();
         $RequestMethod = $_SERVER['REQUEST_METHOD'];
 
-
         $this->rePatch($this->RequestURI);
         if (empty($this->Patch[0]) && !empty(getConfig("default_route"))) {
             $this->RequestURI = getConfig("default_route");
             $this->rePatch($this->RequestURI);
         }
 
+
+
         if (!Routes::verifyRoute($this->RequestURI, $RequestMethod)) {
+
             $nController = "\\Controller\\".$this->Patch[0];
             $nMethod = $this->Patch[1] ?? "index";
 
@@ -97,12 +99,14 @@ class FastApp {
             }
         }else{
             $this->Route = Routes::getRoute($this->RequestURI, $RequestMethod);
+
             Routes::validateRoute($this->Route);
             Routes::clearRoutes();
 
-            execute_callbacks($this->Route, 'onCallBefore');
+
+            execute_callbacks($this->Route, 'onCallBefore', $this->Route['Attrs'] ?? [] );
             if (execute_class($this->Route['Controller'], $this->Route['Method'], $this->Route['Attrs'] ?? [] )) {
-                execute_callbacks($this->Route, 'onCallAfter');
+                execute_callbacks($this->Route, 'onCallAfter', $this->Route['Attrs'] ?? []);
                 return;
             }
 

@@ -120,6 +120,7 @@ class Routes {
             }
 
             $finalRoute = str_replace("//", "/", $route);
+
             self::other($type, $finalRoute, $configs);
         }
     }
@@ -152,8 +153,8 @@ class Routes {
             return true;
         }
 
-        foreach (self::$DynamicRoutes as $dRoute => $nRoute){
-            foreach ($nRoute as $type => $args){
+        if (isset(self::$DynamicRoutes[$method])){
+            foreach (self::$DynamicRoutes[$method] as $type => $args){
                 preg_match_all("/{(.*?)}/", $type, $vars);
                 $key = str_replace($vars[0], '([^/]+)', $type);
                 if (preg_match('#^'.$key.'$#', $route, $matches)){
@@ -163,11 +164,13 @@ class Routes {
                     }
                     $args['Attrs'] = $attrs;
 
-                    self::$Routes[$dRoute][$matches[0]] = $args;
+                    self::$Routes[$method][$matches[0]] = $args;
+
                     return true;
                 }
             }
         }
+
         return false;
     }
 

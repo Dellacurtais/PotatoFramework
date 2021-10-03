@@ -14,7 +14,7 @@ if (!function_exists("uploadImage")) {
         $Config = getConfig("upload");
         $storage = new \Upload\Storage\FileSystem(ROOT_PATH . $Config['image']);
         $file = new \Upload\File($input, $storage);
-        $file->setName(\System\Libraries\UUID::v4() . "-" . ramdonCode(6));
+        $file->setName(\System\Libraries\UUID::v4() . "-" . randomCode(6));
 
 
         $Validations = [];

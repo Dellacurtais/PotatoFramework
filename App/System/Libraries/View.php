@@ -8,7 +8,7 @@ class View {
     const VIEW = 'view';
 
     protected $file;
-    protected $params;
+    protected $params = [];
     protected $message;
     protected $status;
     protected $type = "view";
@@ -62,6 +62,8 @@ class ViewHtml extends View {
     public function getParams(){
         return $this->params;
     }
+
+
 }
 
 class ViewJson extends View {
@@ -103,5 +105,9 @@ class ViewJson extends View {
 
     public function getResponse(){
         return $this->params;
+    }
+
+    public function toJson(){
+        return json_encode(["status" => $this->getStatus(), "message" => $this->getMessage(), "response" => $this->getResponse()]);
     }
 }

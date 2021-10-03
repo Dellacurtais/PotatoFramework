@@ -4,9 +4,9 @@ namespace System;
 class Request {
 
     protected static $instance = null;
+    protected static $paramJson = null;
 
     protected $allHeaders;
-    protected static $paramJson = null;
 
     const GET = "GET";
     const POST = "POST";
@@ -15,6 +15,7 @@ class Request {
     const EXTRA = "EXTRA";
 
     protected static $extra;
+    protected static $bundle;
 
     /**
      * Obter instancia da class
@@ -199,6 +200,22 @@ class Request {
             return $this->allHeaders[$key];
 
         return null;
+    }
+
+    /**
+     * @param $key
+     * @param $value
+     */
+    public function setBundle($key, $value){
+        self::$bundle[$key] = $value;
+    }
+
+    /**
+     * @param $key
+     * @return mixed|null
+     */
+    public function getBundle($key){
+        return self::$bundle[$key] ?? null;
     }
 
     public function __get($key){

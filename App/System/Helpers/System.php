@@ -266,15 +266,39 @@ if (!function_exists('getDatetime')) {
 }
 
 if (!function_exists('execute_callbacks')){
-    function execute_callbacks($callback, $type){
+    function execute_callbacks($callback, $type, $attrs = []){
         if (isset($callback[$type]) && !is_null($callback[$type])){
             if (is_array($callback[$type])){
                 foreach ($callback[$type] as $callsback){
                     $onCallClass = $callsback[0];
                     $methodCall = $callsback[1];
+                    try {
+                        $verifyClass = new ReflectionClass($onCallClass);
+                        $totalParams = $verifyClass->getMethod($methodCall)->getParameters();
+                        $onCallInit = new $onCallClass();
 
-                    $onCallInit = new $onCallClass();
-                    $onCallInit->$methodCall($callback, $callsback);
+                        $finalAttrs = [];
+                        foreach ($totalParams as $parameter) {
+                            $nameVar = $parameter->getName();
+                            if (isset($attrs[$nameVar])){
+                                $finalAttrs[] = $attrs[$nameVar];
+                            }else{
+                                switch ($nameVar){
+                                    case 'request':
+                                        $finalAttrs[] = \System\Request::getInstance();
+                                        break;
+                                    case 'response':
+                                        $finalAttrs[] = \System\Response::getInstance();
+                                        break;
+                                }
+                            }
+                        }
+
+                        call_user_func_array([$onCallInit, $methodCall], $finalAttrs);
+
+                    } catch (ReflectionException $e) {
+                        continue;
+                    }
                 }
             }else {
                 $callback[$type]($callback);
@@ -289,6 +313,7 @@ if (!function_exists('execute_class')){
             try {
                 $verifyClass = new ReflectionClass($class);
                 $totalParams = $verifyClass->getMethod($method)->getParameters();
+                $initClass = new $class();
 
                 $finalAttrs = [];
                 foreach ($totalParams as $parameter) {
@@ -301,13 +326,14 @@ if (!function_exists('execute_class')){
                                 $finalAttrs[] = \System\Request::getInstance();
                                 break;
                             case 'response':
-                                $finalAttrs[] = \System\Response::getInstance();
+                                $response = \System\Response::getInstance();
+                                $response->setController($initClass);
+                                $finalAttrs[] = $response;
                                 break;
                         }
                     }
                 }
 
-                $initClass = new $class();
                 $Return = call_user_func_array([$initClass, $method], $finalAttrs);
                 if ($Return instanceof \System\Libraries\View){
                     renderView($Return);
@@ -365,7 +391,7 @@ if (!function_exists('renderView')){
             );
         }
         if ($view->getType() == \System\Libraries\View::JSON) {
-            echo json_encode(["status" => $view->getStatus(), "message" => $view->getMessage(), "response" => $view->getResponse()]);
+            echo $view->toJSON();
         }
     }
 }
