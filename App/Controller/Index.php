@@ -1,9 +1,12 @@
 <?php
 namespace Controller;
 
+use System\Core\Cache;
 use System\Core\Controller;
+use System\Core\Route;
 use System\Request;
 use System\Response;
+use System\ResponseType;
 
 class Index extends Controller {
 
@@ -18,6 +21,8 @@ class Index extends Controller {
      *
      * When the method has $request and $response in the parameters, both will automatically assume class System\Response and System\Request
      */
+    #[Cache(useUrl: true, time: 3600)]
+    #[Route(type: Request::GET, route: 'Home', headers: ["Content-Type:".ResponseType::CONTENT_HTML])]
     public function Index(Request $request, Response $response){
 
         return $response->html()
@@ -33,6 +38,8 @@ class Index extends Controller {
      *
      * @param mixed $id dynamic value in url {id}
      */
+    #[Cache(useUrl: true, time: 3600)]
+    #[Route(type: Request::GET, route: 'Example', headers: ["Content-Type:".ResponseType::CONTENT_HTML])]
     public function FindExample($id){
 
     }

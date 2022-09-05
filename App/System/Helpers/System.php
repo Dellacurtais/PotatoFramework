@@ -1,5 +1,7 @@
 <?php
 
+use System\Core\iAttribute;
+
 if (!function_exists('redirect')){
     /**
      * Redirecionamento de página
@@ -274,8 +276,15 @@ if (!function_exists('execute_callbacks')){
                     $methodCall = $callsback[1];
                     try {
                         $verifyClass = new ReflectionClass($onCallClass);
-                        $totalParams = $verifyClass->getMethod($methodCall)->getParameters();
+                        $MethodRef = $verifyClass->getMethod($methodCall);
+
+                        $totalParams = $MethodRef->getParameters();
                         $onCallInit = new $onCallClass();
+
+                        $Attributes = $MethodRef->getAttributes();
+                        foreach($Attributes as $attribute) {
+                            $attribute->newInstance();
+                        }
 
                         $finalAttrs = [];
                         foreach ($totalParams as $parameter) {
@@ -312,8 +321,31 @@ if (!function_exists('execute_class')){
         if (class_exists($class)) {
             try {
                 $verifyClass = new ReflectionClass($class);
-                $totalParams = $verifyClass->getMethod($method)->getParameters();
+                $MethodRef = $verifyClass->getMethod($method);
+
+                $totalParams = $MethodRef->getParameters();
                 $initClass = new $class();
+
+                $Attributes = $MethodRef->getAttributes();
+                $RouteAttr = null;
+                $AllAttributes = [];
+                $HasCache = null;
+                foreach($Attributes as $attribute) {
+                    $Build = $attribute->newInstance();
+                    if ($Build instanceof \System\Core\Route){
+                        $RouteAttr = $Build;
+                    }
+                    if ($Build instanceof \System\Core\Cache){
+                        $HasCache = $Build;
+                    }
+                    if ($Build instanceof iAttribute){
+                        $AllAttributes[] = $Build;
+                    }
+                }
+
+                foreach ($AllAttributes as $attribute){
+                    $attribute->execute($RouteAttr);
+                }
 
                 $finalAttrs = [];
                 foreach ($totalParams as $parameter) {
@@ -334,9 +366,19 @@ if (!function_exists('execute_class')){
                     }
                 }
 
-                $Return = call_user_func_array([$initClass, $method], $finalAttrs);
-                if ($Return instanceof \System\Libraries\View){
-                    renderView($Return);
+                if ($HasCache){
+                    $HasCache->execute();
+                    if ($HasCache->isInvalid){
+                        $Return = call_user_func_array([$initClass, $method], $finalAttrs);
+                        if ($Return instanceof \System\Libraries\View){
+                            $HasCache->saveCache(renderView($Return, true));
+                        }
+                    }
+                }else{
+                    $Return = call_user_func_array([$initClass, $method], $finalAttrs);
+                    if ($Return instanceof \System\Libraries\View){
+                        renderView($Return);
+                    }
                 }
 
                 return true;
@@ -383,15 +425,23 @@ if (!function_exists('renderShortcode')){
 }
 
 if (!function_exists('renderView')){
-    function renderView(\System\Libraries\View $view){
+    function renderView(\System\Libraries\View $view, $return = false){
         if ($view->getType() == \System\Libraries\View::VIEW){
-            \System\Response::getInstance()->getController()->setView(
+            $HasReturn = \System\Response::getInstance()->getController()->setView(
                 $view->getView(),
-                $view->getParams()
+                $view->getParams(),
+                $return
             );
+            if ($return){
+                return $HasReturn;
+            }
         }
         if ($view->getType() == \System\Libraries\View::JSON) {
-            echo $view->toJSON();
+            if ($return){
+                return $view->toJSON();
+            }else{
+                echo $view->toJSON();
+            }
         }
     }
 }

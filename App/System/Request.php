@@ -10,6 +10,13 @@ class Request {
 
     const GET = "GET";
     const POST = "POST";
+    const ALL = "ALL";
+    const PUT = "PUT";
+    const DELETE = "DELETE";
+    const PATCH = "PATCH";
+    const OPTIONS = "OPTIONS";
+    const HEAD = "HEAD";
+
     const REQUEST = "REQUEST";
     const JSON = "JSON";
     const EXTRA = "EXTRA";

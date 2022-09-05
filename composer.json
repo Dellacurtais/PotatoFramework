@@ -12,9 +12,9 @@
   "require": {
     "ext-json": "*",
     "ext-pdo": "*",
-    "smarty/smarty": "~3.1",
-    "delight-im/cookie": "~3.1",
-    "php-unit-conversion/php-unit-conversion": "1.2.1",
+    "smarty/smarty": "^3",
+    "delight-im/cookie": "^3",
+    "php-unit-conversion/php-unit-conversion": "^1",
     "illuminate/database": "^8",
     "thunderer/shortcode": "^0.7",
     "illuminate/pagination": "^8"

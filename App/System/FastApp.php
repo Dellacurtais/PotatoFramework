@@ -94,7 +94,7 @@ class FastApp {
             $nController = "\\Controller\\".$this->Patch[0];
             $nMethod = $this->Patch[1] ?? "index";
 
-            if (!execute_class($nController, $nMethod)) {
+            if (!execute_class($nController, $nMethod, [])) {
                 goto OnNotFound;
             }
         }else{

@@ -6,6 +6,22 @@ use System\Response;
 
 class Routes {
 
+    public static function registerRoutesFromControllerAttributes(array $controllers){
+        foreach($controllers as $controller) {
+            $reflectionController = new \ReflectionClass($controller);
+
+            foreach($reflectionController->getMethods() as $method) {
+                $attributes = $method->getAttributes(Route::class, \ReflectionAttribute::IS_INSTANCEOF);
+
+                foreach($attributes as $attribute) {
+                    $route = $attribute->newInstance();
+                    self::simple($route->type, $route->route, [$controller, $method->getName()], $route->headers, $route->requireHeader, $route->onCallBefore, $route->onCallAfter, $route->onCallFinish);
+                }
+            }
+        }
+    }
+
+
     protected static $Routes = [];
     protected static $DynamicRoutes = [];
 

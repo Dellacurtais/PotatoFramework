@@ -5,7 +5,7 @@ use \System\ResponseType;
 use \Controller\Index;
 use \System\Response;
 
-Routes::get('Home', [
+/**Routes::get('Home', [
     'Controller' => Index::class,
     "Method" => "Index",
     'Headers' => [
@@ -16,8 +16,8 @@ Routes::get('Home', [
     'onCallAfter' => [],
     'onCallFinish' => []
 ]);
-
+ **/
 /**
  * Example
- */
 Routes::get("find/{id}", [ 'Controller' => Index::class, "Method" => "FindExample" ]);
+ */
